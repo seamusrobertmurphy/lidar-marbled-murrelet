@@ -1,0 +1,91 @@
+---
+title: "Lidar marbled murrelet"
+subtitle: ""
+author:
+    - name: Murphy, S
+      url: https://scholar.google.com/citations?hl=en&user=jDGq9I4AAAAJ
+      orcid: 0000-0002-1792-0351
+      email: seamusrobertmurphy@gmail.com
+
+date: today
+format:
+  docx:
+    prefer-html: true
+    reference-doc: ../04.references/style-formal.docx
+    highlight-style: pygments
+    latex_engine: xelatex
+
+  html:
+    page-layout: full
+    toc: true
+    number-sections: false
+    embed-resources: true
+    toc-title: "**Table of Contents**"
+    toc-location: right
+    toc-depth: 3
+    theme:
+      - ../04.references/style.scss
+      - cosmo
+    code-fold: false
+    code-tools: true
+    code-link: true
+    max-width: 1000px
+    grid:
+      body-width: 1000px
+      margin-width: 200px
+
+execute:
+  eval: true
+  echo: true
+  warning: false
+  message: false
+  error: false
+  comment: NA
+
+always_allow_html: true
+engine: knitr
+citeproc: true
+editor: visual
+bibliography: ../04.references/references.bib
+csl: ../04.references/springer-basic-author-date.csl
+keywords: []
+---
+
+```{r}
+#| label: setup
+#| echo: true
+#| output: false
+# Rendering this document runs the whole analysis. Every table and figure is written
+# by a chunk below into 03.outputs, and every number in the prose is read back from
+# those files by inline R, so the text cannot drift from the results.
+library(knitr)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+
+repo <- normalizePath("..")
+INP  <- file.path(repo, "02.inputs")
+TBL  <- file.path(repo, "03.outputs", "tables")
+FIG  <- file.path(repo, "03.outputs", "figures")
+dir.create(TBL, recursive = TRUE, showWarnings = FALSE)
+dir.create(FIG, recursive = TRUE, showWarnings = FALSE)
+
+tbl <- function(f) read.csv(file.path(TBL, f))
+
+# Run `code` only when `path` is missing, so a render rebuilds an output that was
+# deleted and leaves a finished one alone. Delete the file to force a rebuild.
+build_once <- function(path, code) {
+  if (!file.exists(path)) force(code)
+  invisible(path)
+}
+```
+
+# Introduction
+
+# Methods
+
+# Results
+
+# Discussion
+
+# Data availability {.unnumbered}
+
+# References {.unnumbered}
