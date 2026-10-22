@@ -44,3 +44,9 @@ with this file. The queries are built from that selection by the `review-queries
 `01.manuscript/lidar-marbled-murrelet.qmd`.
 
 ## Deviations
+
+2026-10-21. The grey literature strand was not searched by hand at the three agencies named under Sources. Agency reports and chapters were found instead while retrieving full texts, through the authors' own publication lists and the provincial documents site, and each is recorded in `full_text_route` of `review-records.csv`. Reason: the searched strands and the citation chase already returned the provincial reports on murrelet habitat methods.
+
+2026-10-21. Citation chasing ran from five central records, Cosgrove et al. (2024), Hagar et al. (2018), Hagar et al. (2014), Silvergieter and Lank (2011) and Burger et al. (2018). Semantic Scholar held no references for three of them, recorded as gaps in `review-search-log.csv`, so their backward chase is incomplete.
+
+2026-10-21. Columns `full_text_route`, `place`, `response`, `predictors`, `lidar_measures`, `method`, `evaluation`, `transfer` and `clayoquot_lidar_model` were added to `review-records.csv` so that each retained record names the attributes the questions turn on, and `full_text` takes `no` for a retained record whose full text could not be reached.

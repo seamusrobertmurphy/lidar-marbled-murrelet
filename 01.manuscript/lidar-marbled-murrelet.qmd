@@ -1,5 +1,5 @@
 ---
-title: "Mapping marbled murrelet nesting habitat from open airborne laser scanning in Clayoquot Sound, British Columbia"
+title: "Mapping Marbled Murrelet nesting habitat from open airborne laser scanning in Clayoquot Sound, British Columbia"
 subtitle: ""
 author:
     - name: Murphy, S
@@ -49,16 +49,16 @@ editor: visual
 bibliography: ../04.references/references.bib
 csl: ../04.references/springer-basic-author-date.csl
 keywords:
-  - marbled murrelet
-  - Brachyramphus marmoratus
-  - nesting habitat
   - airborne laser scanning
-  - lidar
+  - Brachyramphus marmoratus
+  - Clayoquot Sound
   - habitat suitability
+  - lidar
+  - marbled murrelet
   - MaxEnt
   - model transferability
+  - nesting habitat
   - old-growth forest
-  - Clayoquot Sound
 ---
 
 ```{r}
@@ -79,6 +79,11 @@ dir.create(TBL, recursive = TRUE, showWarnings = FALSE)
 dir.create(FIG, recursive = TRUE, showWarnings = FALSE)
 
 tbl <- function(f) read.csv(file.path(TBL, f))
+fmt <- \(x, d = 2) formatC(x, format = "f", digits = d, big.mark = ",")
+pv <- \(p) if (p < 0.001) "*P* < 0.001" else paste0("*P* = ", fmt(p))
+ev <- \(what, col = "value", m = "local") { t <- tbl("T4_evaluation.csv"); t[[col]][t$model == m & t$metric == what] }
+sep <- \(what, col) { t <- tbl("T3_separability.csv"); t[[col]][t$measure == what] }
+smp <- \(what) { t <- tbl("T2_sample.csv"); t$n[t$step == what] }
 
 # Run `code` only when `path` is missing, so a render rebuilds an output that was
 # deleted and leaves a finished one alone. Delete the file to force a rebuild.
@@ -88,9 +93,35 @@ build_once <- function(path, code) {
 }
 ```
 
-# Introduction
+# Abstract {.unnumbered}
 
-# Methods
+By 2019, open airborne laser scanning had measured old-growth forest structure along much of the British Columbia coast, but the one Marbled Murrelet nesting-habitat model built from such scans and located nests had been trained in Desolation Sound and lost accuracy when moved to Clayoquot Sound, and little was known about whether a model built from local nests would do better. This study rebuilt that model, maximum entropy modeling of forest vertical complexity and internal forest gaps in 1 ha cells, in Clayoquot Sound on the west coast of Vancouver Island from the provincial laser scans of 2019 and nests of radio-tracked birds from 2000 to 2002 (`r smp("nests in file")` nests, which gave `r smp("nest cells in available forest")` nest cells in scanned, tall, unharvested forest, against `r fmt(smp("background cells in available forest"), 0)` background cells). The model was scored by five-fold spatial cross-validation in 10 km blocks and compared with the same model transferred from Desolation Sound. Neither measure separated nest cells from background cells (forest vertical complexity, `r pv(sep("fvc", "p_value"))`; internal forest gaps, `r pv(sep("empty_gaps", "p_value"))`), and nest cells held more internal gaps than background cells, the reverse of the direction found in Desolation Sound. The local model ranked held-out nest cells above background cells no more often than chance (area under the curve `r fmt(ev("AUC"))`, 95 percent confidence interval `r fmt(ev("AUC", "low"))` to `r fmt(ev("AUC", "high"))`; kappa `r fmt(ev("Kappa"))`) and did not overfit (ratio of held-out to training error `r fmt(ev("RMSE ratio"))`). Its interval included the area under the curve of `r fmt(ev("AUC", m = "transferred"))` reached by the transferred model, so the local model could not be shown to outperform the borrowed one. With so few located nests, open laser scans alone did not support a local nesting-habitat model in Clayoquot Sound, and a transferred model, or one fitted to nests pooled across regions, offered the better-supported basis for mapping nesting habitat there until more nests could be located.
+
+# INTRODUCTION
+
+The Marbled Murrelet, *Brachyramphus marmoratus* (Gmelin, 1789), a seabird that commutes between the ocean and nest sites inland in old-growth coniferous forest, was listed as threatened in both Canada and the United States, and loss of that forest was the primary reason given for its decline [@burger2001using]. Because nests were cryptic and difficult to locate [@burger2001using], the nesting habitat that conservation planning in British Columbia set out to retain was mapped from forest inventory, air photographs and aerial surveys, and then judged against the few nests that radio telemetry had found [@mather2010marbled; @burger2018reliability].
+
+In British Columbia the provincial habitat model classed forest-cover polygons as suitable where stands were older than 140 years, at least 28.5 m tall, below set elevations and within 50 km of the sea [@mather2010marbled], while air photo interpretation and low-level aerial surveys ranked stands from canopy features seen from above [@waterhouse2008using; @waterhouse2009using; @burger2009new]. Overlaid on 171 nests found by radio telemetry in four regions, the provincial model placed 52.6 percent of nests in suitable habitat, 69.4 percent of 36 nests in Clayoquot Sound and 52.1 percent of 121 nests in Desolation Sound [@burger2018reliability]. The aerial survey ranks separated nests from random points in Desolation Sound and Toba Inlet but not in Clayoquot Sound [@waterhouse2009using], and all three methods inferred forest structure from maps or from observers' ranks rather than measuring it.
+
+Airborne laser scanning measured canopy height and the vertical arrangement of vegetation directly, and murrelet habitat models built from it scored well against survey data. In southwestern Oregon a lidar model of stand occupancy reached an area under the receiver operating characteristic curve (AUC) of 0.74, against 0.64 for a model built from vegetation maps, and two lidar measures separated 11 nest trees from random points with an average AUC of 0.91 [@hagar2014modeling]. In redwood timberland in northern California, habitat suitability rose with the density, summed height and spread of heights of tall treetops [@lamphear2025marbled], and on northern Vancouver Island a random forest predicted helicopter survey ranks from laser-derived canopy and terrain measures with an overall accuracy of 71.05 percent [@clyde2017fine]. Among the studies reviewed here, Cosgrove et al. [-@cosgrove2024modeling] were the first to train a laser-scan model on located nests in British Columbia, fitting maximum entropy modeling (MaxEnt) to radio-tracked nests in Desolation Sound in 1 ha cells. The probability of a nest in their model rose with forest vertical complexity and fell as internal forest gaps increased, and the model scored an AUC of 0.77 and a Boyce index, a measure of how closely predicted suitability tracked the frequency of nests, of 0.99 in Desolation Sound.
+
+Transferred to Clayoquot Sound, where it would have to hold to be of use to management, the Desolation Sound model of Cosgrove et al. [-@cosgrove2024modeling] scored an AUC of 0.63 and a Boyce index of 0.67, below the AUC of 0.7 those authors set for a good model. In Oregon, an occupancy model transferred from the Coos Bay District to the Siuslaw National Forest scored an AUC of 0.73, against 0.78 for a model selected from Siuslaw data [@hagar2018modeling]. In southern British Columbia, ground plots at radio-tracked nests showed canopy height and canopy complexity relating to nest sites in opposite directions in the two sounds, Clayoquot Sound nest patches being shorter and less varied than random patches, and the authors judged that "the limited size of our dataset and strong regional interactions precluded" testing Desolation Sound models against Clayoquot Sound nests [@silvergieter2011patch, 11].
+
+No study found in this review had built a laser-scan model from Clayoquot Sound nests, so whether a model built from local nests would outperform one borrowed from Desolation Sound was unknown. The provincial laser scans flown over Clayoquot Sound in 2019 and the public release of the radio-tracked nest locations [@cooke2022marbled] made the comparison possible. The objectives of this study were to (1) rebuild the two-measure model of Cosgrove et al. [-@cosgrove2024modeling] from Clayoquot Sound nests and open laser scans and score it on spatially separate groups of nests, and (2) compare that score with the score of the Desolation Sound model transferred to Clayoquot Sound. The expected direction of each measure and its source are given in @tbl-attributes.
+
+```{r}
+#| label: tbl-attributes
+#| tbl-cap: "Laser-scan measures entered in the model, with the direction of their relation to nest sites expected from prior work."
+readr::read_csv("../02.inputs/derived/review-attributes.csv", show_col_types = FALSE) |>
+  dplyr::transmute(Measure = measure, `Expected direction` = expected_direction, Reasoning = reasoning, Source = paste0("[", gsub("; ", "; @", paste0("@", citation)), "]")) |>
+  knitr::kable(format = "pipe")
+```
+
+# METHODS
+
+## Study area
+
+Clayoquot Sound, on the west coast of Vancouver Island, British Columbia (@fig-study-area), supported one of the highest concentrations of breeding Marbled Murrelets south of Alaska, including more than 10 percent of the estimated provincial population [@burger2001using]. The study area was the smallest convex polygon enclosing the nests, widened by 5 km.
 
 ## Literature review
 
@@ -223,7 +254,7 @@ if (!file.exists("../02.inputs/derived/review-records.csv")) {
 ```{r}
 #| label: review-chase
 #| echo: true
-central <- c()
+central <- c("10.5751/ace-02585-190105", "10.3133/ofr20181035", "10.1002/wsb.407", "10.5751/ACE-00483-060206", "10.22230/jem.2018v18n1a593")
 if (length(central) > 0 && !file.exists("../02.inputs/derived/review-chase-hits.csv")) {
   chase <- function(seed_doi, direction) {
     # Semantic Scholar Academic Graph references and citations, https://api.semanticscholar.org/api-docs/graph#tag/Paper-Data
@@ -252,15 +283,20 @@ if (length(central) > 0 && !file.exists("../02.inputs/derived/review-chase-hits.
 records <- readr::read_csv("../02.inputs/derived/review-records.csv", show_col_types = FALSE)
 search_log <- readr::read_csv("../02.inputs/derived/review-search-log.csv", show_col_types = FALSE)
 review_counts <- tibble::tibble(
-  Stage = c("Records retrieved", "Unique after removing duplicates", "Excluded on title and abstract", "Read in full", "Retained"),
-  Records = c(sum(search_log$retrieved), nrow(records), sum(records$decision == "exclude" & records$full_text != "yes", na.rm = TRUE), sum(records$full_text == "yes", na.rm = TRUE), sum(records$decision == "include", na.rm = TRUE))
+  Stage = c("Records retrieved", "Unique after removing duplicates", "Excluded on title and abstract", "Retained", "Read in full", "Full text not reached"),
+  Records = c(sum(search_log$retrieved), nrow(records), sum(records$decision == "exclude" & dplyr::coalesce(records$full_text, "") != "yes"), sum(records$decision == "include"), sum(records$full_text == "yes", na.rm = TRUE), sum(records$full_text == "no", na.rm = TRUE))
 )
+rc <- \(stage) review_counts$Records[review_counts$Stage == stage]
 review_reasons <- records |>
   dplyr::filter(decision == "exclude") |>
   dplyr::count(reason, name = "Records", sort = TRUE)
 ```
 
+The literature review followed a protocol fixed before the first search on 28 September 2026, with one question for each objective and a third asking whether the comparison had already been made. A curated reference library and Semantic Scholar were searched for Marbled Murrelet combined with airborne laser scanning or lidar, with habitat suitability, MaxEnt or transferability, and with Clayoquot Sound, and one round of backward and forward citation chasing was run from five central records. Records were retained if they were peer-reviewed articles, reviews, chapters, conference papers or agency reports that supplied a method, threshold or data product, were published in English from 1990 to 2026, and bore on laser-scan measures at nest sites, nesting-habitat models and their transfer, or nesting habitat in Clayoquot Sound. Of `r rc("Records retrieved")` records retrieved, `r rc("Unique after removing duplicates")` were unique, `r rc("Excluded on title and abstract")` were excluded on title and abstract and `r rc("Retained")` were retained, of which `r rc("Read in full")` were read in full. The full text of `r rc("Full text not reached")` could not be reached, among them unpublished reports and a thesis from the 1990s and journal articles held behind paywalls. A single reader screened and read every record.
+
 ## Nest data
+
+Nests were located by radio-tracking Marbled Murrelets captured at sea [@cosgrove2024modeling], and the published data set for Clayoquot Sound held `r smp("nests in file")` ground-truthed nests found from 2000 to 2002, with a positional error of about 50 m [@cooke2022marbled]. No nest location was mapped in this paper.
 
 ```{r}
 #| label: nests
@@ -331,7 +367,11 @@ list.files("../02.inputs/lidarbc/laz", "laz$") |>
   }))
 ```
 
+Point clouds came from the 2019 Vancouver Island acquisition of LidarBC, the open lidar program of the Province of British Columbia. Of the `r nrow(tiles)` tiles whose centers lay inside the study area, the `r sum(tiles$nest)` tiles within 150 m of a nest and `r sum(tiles$background)` tiles drawn at random from the rest were used. Nests outside the 2019 acquisition were not used, so that every cell came from a single acquisition. Points classed as noise or withheld were dropped, and each tile was thinned at random and then evened to 12 points per square meter in 10 m cells, so that point density did not differ between nest and background tiles.
+
 ## Harvest screen
+
+Forest harvested from 1998 to 2022 was screened out with the Canada Forest Harvest 1985–2022 product of the National Terrestrial Ecosystem Monitoring System, which records the year of stand-replacing harvest on a 30 m grid [@hermosilla2016mass].
 
 ```{r}
 #| label: ntems
@@ -349,7 +389,53 @@ build_once("../02.inputs/ntems/harvest_cs.tif", {
 })
 ```
 
+```{r}
+#| label: fig-study-area
+#| fig-cap: !expr paste0("Clayoquot Sound on the west coast of Vancouver Island, British Columbia. The dashed line bounds the study area, drawn 5 km around the radio-tracked nests, the blue line bounds the ", nrow(tiles), " LidarBC scan tiles flown in 2019, each about ", round(mean(as.numeric(sf::st_area(tiles))) / 1e6, 1), " km², and orange marks forest harvested from 1998 to 2022. Nest locations are not shown. The inset places the study area on Vancouver Island. Scale 1:400,000.")
+# Freshwater Atlas Coastlines, Province of British Columbia
+# https://catalogue.data.gov.bc.ca/dataset/freshwater-atlas-coastlines
+dir.create("../02.inputs/fwa", showWarnings = FALSE)
+build_once("../02.inputs/fwa/coastline.gpkg", sf::read_sf("https://openmaps.gov.bc.ca/geo/pub/wfs?service=WFS&version=2.0.0&request=GetFeature&typeNames=pub:WHSE_BASEMAPPING.FWA_COASTLINES_SP&outputFormat=application/json&srsName=EPSG:3157&bbox=980000,460000,1045000,525000,urn:ogc:def:crs:EPSG::3005") |> sf::write_sf("../02.inputs/fwa/coastline.gpkg"))
+build_once("../03.outputs/figures/F1_study_area.png", {
+  frame <- sf::st_bbox(c(xmin = 266000, ymin = 5454000, xmax = 324000, ymax = 5509000), crs = 3157)
+  coast <- sf::read_sf("../02.inputs/fwa/coastline.gpkg")
+  # Natural Earth 1:10 million admin 0 countries, read through the rnaturalearthhires package
+  # https://www.naturalearthdata.com/downloads/10m-cultural-vectors/10m-admin-0-countries/
+  land <- rnaturalearth::ne_countries(scale = 10, country = c("Canada", "United States of America"), returnclass = "sf") |> sf::st_transform(3157)
+  harvest <- terra::rast("../02.inputs/ntems/harvest_cs.tif") |> terra::project("EPSG:3157", method = "near", res = 30) |> terra::aggregate(3, fun = "max") |> (\(r) r >= 1998)() |> terra::as.data.frame(xy = TRUE) |> dplyr::filter(dplyr::if_any(3))
+  area <- nests |> sf::st_union() |> sf::st_convex_hull() |> sf::st_buffer(5000)
+  main <- ggplot2::ggplot() +
+    ggplot2::geom_tile(data = harvest, ggplot2::aes(x, y, fill = "Harvested 1998 to 2022"), width = 90, height = 90) +
+    ggplot2::geom_sf(data = coast, colour = "grey35", linewidth = 0.2) +
+    ggplot2::geom_sf(data = sf::st_union(tiles), ggplot2::aes(colour = "LidarBC 2019 scan tiles"), fill = NA, linewidth = 0.4) +
+    ggplot2::geom_sf(data = area, ggplot2::aes(linetype = "Study area"), fill = NA, colour = "black", linewidth = 0.4) +
+    ggplot2::scale_fill_manual(NULL, values = "#D55E00") + ggplot2::scale_colour_manual(NULL, values = "#0072B2") + ggplot2::scale_linetype_manual(NULL, values = "dashed") +
+    ggplot2::annotate("text", x = 267200, y = 5456300, label = "Pacific Ocean", hjust = 0, fontface = "italic", size = 2.6, colour = "grey30") +
+    ggplot2::annotate("rect", xmin = 306500 + c(0, 2500, 5000, 7500), xmax = 306500 + c(2500, 5000, 7500, 10000), ymin = 5488500, ymax = 5489000, fill = c("black", "white", "black", "white"), colour = "black", linewidth = 0.2) +
+    ggplot2::annotate("text", x = 306500 + c(0, 5000, 10000), y = 5489800, label = c("0", "5", "10 km"), size = 2.4) +
+    ggplot2::annotate("text", x = 311500, y = 5487300, label = "Scale 1:400,000", size = 2.4) +
+    ggplot2::coord_sf(crs = 3157, xlim = frame[c(1, 3)], ylim = frame[c(2, 4)], expand = FALSE, datum = NA) +
+    ggplot2::theme_void(base_size = 8) +
+    ggplot2::theme(panel.border = ggplot2::element_rect(fill = NA, colour = "black", linewidth = 0.5), panel.background = ggplot2::element_rect(fill = "white", colour = NA), legend.position = "none", plot.margin = ggplot2::margin(0, 0, 0, 0))
+  key <- cowplot::get_plot_component(main + ggplot2::theme(legend.position = "right", legend.spacing.y = grid::unit(0, "pt"), legend.margin = ggplot2::margin(0, 0, 0, 0), legend.key.size = grid::unit(9, "pt")), "guide-box-right")
+  locator <- ggplot2::ggplot() +
+    ggplot2::geom_sf(data = land, fill = "grey80", colour = NA) +
+    ggplot2::geom_sf(data = sf::st_as_sfc(frame), fill = NA, colour = "black", linewidth = 0.4) +
+    ggplot2::coord_sf(crs = 3157, xlim = c(100000, 800000), ylim = c(5250000, 5900000), expand = FALSE, datum = NA) +
+    ggplot2::theme_void() + ggplot2::theme(panel.background = ggplot2::element_rect(fill = "white", colour = NA))
+  fig <- cowplot::ggdraw(main) +
+    cowplot::draw_grob(grid::rectGrob(gp = grid::gpar(fill = "white", col = "grey40", lwd = 0.8)), x = 0.012, y = 0.665, width = 0.245, height = 0.323) +
+    cowplot::draw_plot(locator, x = 0.022, y = 0.79, width = 0.225, height = 0.19) +
+    cowplot::draw_grob(key, x = 0.022, y = 0.672, width = 0.225, height = 0.11, hjust = 0, vjust = 0) +
+    ggplot2::theme(plot.background = ggplot2::element_rect(fill = "white", colour = NA))
+  ggplot2::ggsave("../03.outputs/figures/F1_study_area.png", fig, width = 58000 / 4e3, height = 55000 / 4e3, units = "cm", dpi = 300)
+})
+knitr::include_graphics("../03.outputs/figures/F1_study_area.png")
+```
+
 ## Forest structure
+
+Heights were normalized to the ground by a triangulated surface on ground points, points below 0 m or at or above 100 m were discarded, and five measures were computed in 100 m cells of 1 ha each [@roussel2020lidr], following the grid and definitions of Cosgrove et al. [-@cosgrove2024modeling]. Forest vertical complexity was the standard deviation of point heights, and internal forest gaps were the number of empty 1 m³ voxels lying below the highest filled voxel of each 1 m column, summed over the cell. Forest height, the 95th percentile of point heights, canopy cover, the share of 1 m columns holding a point, and point density served only to define available forest.
 
 ```{r}
 #| label: metrics
@@ -380,6 +466,8 @@ build_once("../02.inputs/derived/metrics.tif", {
 
 ## Available forest
 
+A cell was treated as available forest where forest height was at least 20 m, canopy cover at least 90 percent and point density at least 10 points per square meter, and where no 30 m pixel inside it was harvested from 1998 to 2022. Nest cells were available-forest cells holding a nest, and background cells were all available-forest cells in the background tiles (@tbl-sample). The nest sample was small, and the nests were located 17 to 19 years before the scans were flown.
+
 ```{r}
 #| label: cells
 metrics <- terra::rast("../02.inputs/derived/metrics.tif")
@@ -394,15 +482,25 @@ cells <- terra::rast("../02.inputs/ntems/harvest_cs.tif") |>
     background = !nest & lengths(sf::st_intersects(
       sf::st_as_sf(dplyr::pick(x, y), coords = c("x", "y"), crs = 3157),
       dplyr::filter(tiles, background))) > 0)
-build_once("../03.outputs/tables/T1_sample.csv", tibble::tibble(
+build_once("../03.outputs/tables/T2_sample.csv", tibble::tibble(
   step = c("nests in file", "nest cells scanned", "nest cells in available forest",
     "background cells scanned", "background cells in available forest"),
   n = c(nrow(nests), sum(cells$nest & !is.na(cells$fh)), sum(cells$nest & cells$forest),
     sum(cells$background & !is.na(cells$fh)), sum(cells$background & cells$forest))) |>
-  readr::write_csv("../03.outputs/tables/T1_sample.csv"))
+  readr::write_csv("../03.outputs/tables/T2_sample.csv"))
+```
+
+```{r}
+#| label: tbl-sample
+#| tbl-cap: "Nests and 1 ha cells at each step from the nest file to the modeled sample. Available forest was at least 20 m tall with at least 90% canopy cover and no harvest from 1998 to 2022."
+tbl("T2_sample.csv") |>
+  dplyr::transmute(Step = stringr::str_to_sentence(step), Count = formatC(n, format = "d", big.mark = ",")) |>
+  flextable::flextable() |> flextable::align(j = 2, align = "right", part = "all") |> flextable::set_table_properties(layout = "autofit", width = 1)
 ```
 
 ## Model fitting
+
+Following the top model of Cosgrove et al. [-@cosgrove2024modeling], MaxEnt was fitted to forest vertical complexity and internal forest gaps with linear and product features and a regularization multiplier of 0.2, using the maxnet package, which fits MaxEnt as a regularized generalized linear model [@phillips2017opening], so the model was parametric. Predictions were taken on the complementary log-log scale. Cells were assigned to five folds by 10 km square blocks allocated at random [@valavi2019blockcv], so that the nests of each fold lay apart from the nests that trained its model, and each fold was predicted by a model trained on the other four. For classification, each model's threshold was the value that maximized the sum of sensitivity and specificity on its training cells [@liu2005selecting].
 
 ```{r}
 #| label: model
@@ -417,30 +515,171 @@ fit_maxent <- function(d) {
   x <- as.data.frame(d[c("fvc", "empty_gaps")])
   maxnet::maxnet(d$p, x, maxnet::maxnet.formula(d$p, x, classes = "lp"), regmult = 0.2)
 }
-held_out <- purrr::map(1:5, \(k) sample[folds$folds_ids == k, ] |>
-    dplyr::mutate(pred = predict(fit_maxent(sample[folds$folds_ids != k, ]),
-      as.data.frame(dplyr::pick(fvc, empty_gaps)), type = "cloglog")[, 1])) |>
-  purrr::list_rbind()
-roc <- pROC::roc(held_out$p, held_out$pred, quiet = TRUE)
-# Desolation Sound scores from the abstract of Cosgrove et al. (2024)
-# https://doi.org/10.5751/ACE-02585-190105
-build_once("../03.outputs/tables/T2_evaluation.csv", tibble::tibble(
-  model = c("Clayoquot Sound nests, spatial cross-validation",
-    "Desolation Sound nests, internal validation",
-    "Desolation Sound nests, transferred to Clayoquot Sound"),
-  source = c("this study", "Cosgrove et al. (2024)", "Cosgrove et al. (2024)"),
-  auc = c(as.numeric(pROC::auc(roc)), 0.77, 0.63),
-  auc_low = c(pROC::ci.auc(roc)[1], NA, NA),
-  auc_high = c(pROC::ci.auc(roc)[3], NA, NA),
-  boyce = c(ecospat::ecospat.boyce(held_out$pred[held_out$p == 0],
-    held_out$pred[held_out$p == 1], PEplot = FALSE)$cor, 0.99, 0.67)) |>
-  readr::write_csv("../03.outputs/tables/T2_evaluation.csv"))
+score <- \(fit, d) predict(fit, as.data.frame(d[c("fvc", "empty_gaps")]), type = "cloglog")[, 1]
+runs <- purrr::map(1:5, \(k) {
+  train <- sample[folds$folds_ids != k, ]
+  fit <- fit_maxent(train)
+  threshold <- pROC::coords(pROC::roc(train$p, score(fit, train), quiet = TRUE), "best", ret = "threshold")$threshold[1]
+  test <- sample[folds$folds_ids == k, ] |> dplyr::mutate(fold = k)
+  list(test = dplyr::mutate(test, pred = score(fit, test), class = as.integer(pred >= threshold)), train_rmse = sqrt(mean((score(fit, train) - train$p)^2)))
+})
+held_out <- purrr::map(runs, "test") |> purrr::list_rbind()
 ```
 
-# Results
+## Separability
 
-# Discussion
+The separability of nest and background cells on each measure was measured by the index *M* of Kaufman and Remer [-@kaufman1994detection], the absolute difference of the two means divided by the sum of the two standard deviations, and tested with a Wilcoxon rank-sum test.
+
+```{r}
+#| label: separability
+build_once("../03.outputs/tables/T3_separability.csv", sample |>
+  tidyr::pivot_longer(c(fvc, empty_gaps), names_to = "measure") |>
+  dplyr::summarise(.by = measure,
+    nest_mean = mean(value[p == 1]), nest_sd = sd(value[p == 1]),
+    nest_low = t.test(value[p == 1])$conf.int[1], nest_high = t.test(value[p == 1])$conf.int[2],
+    background_mean = mean(value[p == 0]), background_sd = sd(value[p == 0]),
+    background_low = t.test(value[p == 0])$conf.int[1], background_high = t.test(value[p == 0])$conf.int[2],
+    m = abs(nest_mean - background_mean) / (nest_sd + background_sd),
+    w = wilcox.test(value[p == 1], value[p == 0])$statistic,
+    p_value = wilcox.test(value[p == 1], value[p == 0])$p.value) |>
+  readr::write_csv("../03.outputs/tables/T3_separability.csv"))
+```
+
+## Evaluation
+
+Held-out predictions were pooled across folds and scored with the measures used by Murphy et al. [-@murphy2026spatial]. Discrimination was measured by AUC with a DeLong 95 percent confidence interval [@robin2011proc] and by the continuous Boyce index [@hirzel2006evaluating]. Classification at each fold's threshold was summarized by overall accuracy with an exact binomial interval, Cohen's kappa, and the commission and omission error of each class. Agreement between prediction and the observed 0 or 1 outcome was measured by the coefficient of determination (*R*²) of a linear regression of outcome on prediction with its *F* test, root mean square error (RMSE), relative RMSE (RMSE over the mean outcome), mean absolute error, Brier score and Theil's *U* bias, the share of squared error due to the difference between mean prediction and mean outcome. Overfitting was measured by the RMSE ratio, held-out RMSE over training RMSE, with a model rejected above 1.1 [@murphy2026spatial]. Residual autocorrelation was tested by Moran's *I* with inverse-distance weights and by the Durbin-Watson test on residuals ordered by easting. The Clayoquot Sound model was compared with the Desolation Sound model of Cosgrove et al. [-@cosgrove2024modeling] in its own area and transferred to Clayoquot Sound on the two measures those authors reported, AUC and the Boyce index. Analyses were run in R `r getRversion()` [@rcore2024r] with lidR `r packageVersion("lidR")`, maxnet `r packageVersion("maxnet")`, blockCV `r packageVersion("blockCV")`, pROC `r packageVersion("pROC")` and ecospat `r packageVersion("ecospat")`.
+
+```{r}
+#| label: evaluation
+roc <- pROC::roc(held_out$p, held_out$pred, quiet = TRUE)
+auc <- pROC::ci.auc(roc)
+cm <- table(predicted = factor(held_out$class, 0:1), observed = factor(held_out$p, 0:1))
+n <- sum(cm); oa <- sum(diag(cm)) / n; pe <- sum(rowSums(cm) * colSums(cm)) / n^2
+kappa <- (oa - pe) / (1 - pe); kappa_se <- sqrt(oa * (1 - oa) / (n * (1 - pe)^2))
+e <- held_out$pred - held_out$p
+r2 <- summary(lm(p ~ pred, held_out))
+w <- 1 / as.matrix(dist(held_out[c("x", "y")])); diag(w) <- 0
+moran <- ape::Moran.I(e, w)
+dw <- lmtest::dwtest(p ~ pred, data = dplyr::arrange(held_out, x, y))
+# Desolation Sound scores from Cosgrove et al. (2024), Avian Conservation and Ecology 19(1):5
+# https://doi.org/10.5751/ACE-02585-190105
+build_once("../03.outputs/tables/T4_evaluation.csv", tibble::tribble(
+  ~model, ~metric, ~value, ~low, ~high, ~p_value,
+  "local", "Nest cells", sum(held_out$p), NA, NA, NA,
+  "local", "Background cells", sum(held_out$p == 0), NA, NA, NA,
+  "local", "Nest cells above threshold", cm["1", "1"], NA, NA, NA,
+  "local", "Background cells above threshold", cm["1", "0"], NA, NA, NA,
+  "local", "Mean prediction", mean(held_out$pred), NA, NA, NA,
+  "local", "Nest share of cells", mean(held_out$p), NA, NA, NA,
+  "local", "F statistic", r2$fstatistic[1], r2$fstatistic[2], r2$fstatistic[3], NA,
+  "local", "AUC", auc[2], auc[1], auc[3], NA,
+  "local", "Boyce index", ecospat::ecospat.boyce(held_out$pred[held_out$p == 0], held_out$pred[held_out$p == 1], PEplot = FALSE)$cor, NA, NA, NA,
+  "local", "Overall accuracy", oa, binom.test(sum(diag(cm)), n)$conf.int[1], binom.test(sum(diag(cm)), n)$conf.int[2], NA,
+  "local", "Kappa", kappa, kappa - 1.96 * kappa_se, kappa + 1.96 * kappa_se, NA,
+  "local", "Commission error, nest", cm["1", "0"] / sum(cm["1", ]), NA, NA, NA,
+  "local", "Omission error, nest", cm["0", "1"] / sum(cm[, "1"]), NA, NA, NA,
+  "local", "Commission error, background", cm["0", "1"] / sum(cm["0", ]), NA, NA, NA,
+  "local", "Omission error, background", cm["1", "0"] / sum(cm[, "0"]), NA, NA, NA,
+  "local", "R2", r2$r.squared, NA, NA, pf(r2$fstatistic[1], r2$fstatistic[2], r2$fstatistic[3], lower.tail = FALSE),
+  "local", "RMSE", sqrt(mean(e^2)), NA, NA, NA,
+  "local", "RMSE ratio", sqrt(mean(e^2)) / mean(purrr::map_dbl(runs, "train_rmse")), NA, NA, NA,
+  "local", "Relative RMSE", sqrt(mean(e^2)) / mean(held_out$p), NA, NA, NA,
+  "local", "MAE", mean(abs(e)), NA, NA, NA,
+  "local", "Theil's U bias", (mean(held_out$pred) - mean(held_out$p))^2 / mean(e^2), NA, NA, NA,
+  "local", "Brier score", mean(e^2), NA, NA, NA,
+  "local", "Moran's I of residuals", moran$observed, NA, NA, moran$p.value,
+  "local", "Durbin-Watson", unname(dw$statistic), NA, NA, dw$p.value,
+  "desolation", "AUC", 0.77, NA, NA, NA,
+  "desolation", "Boyce index", 0.99, NA, NA, NA,
+  "transferred", "AUC", 0.63, NA, NA, NA,
+  "transferred", "Boyce index", 0.67, NA, NA, NA) |>
+  readr::write_csv("../03.outputs/tables/T4_evaluation.csv"))
+```
+
+```{r}
+#| label: structure-figure
+build_once("../03.outputs/figures/F2_structure.png", {
+  fig <- sample |>
+    dplyr::mutate(empty_gaps = empty_gaps / 1000, group = factor(ifelse(p == 1, "Nest", "Background"), c("Background", "Nest"))) |>
+    tidyr::pivot_longer(c(fvc, empty_gaps), names_to = "measure") |>
+    dplyr::mutate(measure = factor(measure, c("fvc", "empty_gaps"), c("Forest vertical complexity (m)", "Internal forest gaps (thousand empty 1 m³ voxels per ha)"))) |>
+    ggplot2::ggplot(ggplot2::aes(group, value)) +
+    ggplot2::geom_boxplot(ggplot2::aes(fill = group), outlier.shape = NA, width = 0.5, linewidth = 0.3) +
+    ggplot2::geom_jitter(data = \(d) dplyr::filter(d, group == "Nest"), width = 0.12, height = 0, size = 1.2, colour = "black") +
+    ggplot2::facet_wrap(~measure, scales = "free_y") +
+    ggplot2::scale_fill_manual(values = c(Background = "grey85", Nest = "#E69F00"), guide = "none") +
+    ggplot2::labs(x = NULL, y = NULL) +
+    ggplot2::theme_bw(base_size = 8) + ggplot2::theme(strip.background = ggplot2::element_blank(), panel.grid.major.x = ggplot2::element_blank(), panel.grid.minor = ggplot2::element_blank())
+  ggplot2::ggsave("../03.outputs/figures/F2_structure.png", fig, width = 16, height = 7, units = "cm", dpi = 300)
+})
+```
+
+# RESULTS
+
+## Sample
+
+The 2019 scans covered `r smp("nest cells scanned")` cells holding a nest, of which `r smp("nest cells in available forest")` were available forest, against `r fmt(smp("background cells in available forest"), 0)` available-forest cells among the `r fmt(smp("background cells scanned"), 0)` scanned cells of the background tiles (@tbl-sample).
+
+## Separability
+
+Neither measure separated nest cells from background cells (@tbl-separability, @fig-structure). Forest vertical complexity averaged `r fmt(sep("fvc", "nest_mean"))` ± `r fmt(sep("fvc", "nest_sd"))` m (95 percent CI `r fmt(sep("fvc", "nest_low"))` to `r fmt(sep("fvc", "nest_high"))`) at nest cells and `r fmt(sep("fvc", "background_mean"))` ± `r fmt(sep("fvc", "background_sd"))` m (`r fmt(sep("fvc", "background_low"))` to `r fmt(sep("fvc", "background_high"))`) at background cells [*M* = `r fmt(sep("fvc", "m"))`, Wilcoxon rank-sum test, *W* = `r fmt(sep("fvc", "w"), 0)`, `r pv(sep("fvc", "p_value"))`]. Internal forest gaps were larger at nest cells, `r fmt(sep("empty_gaps", "nest_mean") / 1000, 1)` ± `r fmt(sep("empty_gaps", "nest_sd") / 1000, 1)` thousand empty voxels per hectare (`r fmt(sep("empty_gaps", "nest_low") / 1000, 1)` to `r fmt(sep("empty_gaps", "nest_high") / 1000, 1)`), than at background cells, `r fmt(sep("empty_gaps", "background_mean") / 1000, 1)` ± `r fmt(sep("empty_gaps", "background_sd") / 1000, 1)` thousand (`r fmt(sep("empty_gaps", "background_low") / 1000, 1)` to `r fmt(sep("empty_gaps", "background_high") / 1000, 1)`), the reverse of the negative relation found in Desolation Sound, although the difference was not significant [*M* = `r fmt(sep("empty_gaps", "m"))`, *W* = `r fmt(sep("empty_gaps", "w"), 0)`, `r pv(sep("empty_gaps", "p_value"))`].
+
+```{r}
+#| label: tbl-separability
+#| tbl-cap: "Laser-scan measures at nest and background cells in available forest, as mean ± standard deviation (95% confidence interval), with the separability index M and the Wilcoxon rank-sum statistic W. Internal forest gaps are in thousands of empty 1 m³ voxels per ha. * P ≤ 0.05, ** P ≤ 0.01, *** P ≤ 0.001, **** P ≤ 0.0001."
+star <- \(p) dplyr::case_when(is.na(p) ~ "", p <= 0.0001 ~ "****", p <= 0.001 ~ "***", p <= 0.01 ~ "**", p <= 0.05 ~ "*", TRUE ~ "")
+tbl("T3_separability.csv") |>
+  dplyr::mutate(k = ifelse(measure == "empty_gaps", 1000, 1), dplyr::across(nest_mean:background_high, \(x) x / k)) |>
+  dplyr::transmute(Measure = ifelse(measure == "fvc", "Forest vertical complexity (m)", "Internal forest gaps"),
+    Nest = paste0(fmt(nest_mean), " ± ", fmt(nest_sd), " (", fmt(nest_low), "–", fmt(nest_high), ")"),
+    Background = paste0(fmt(background_mean), " ± ", fmt(background_sd), " (", fmt(background_low), "–", fmt(background_high), ")"),
+    M = fmt(m), W = paste0(fmt(w, 0), star(p_value))) |>
+  flextable::flextable() |> flextable::align(j = 2:5, align = "right", part = "body") |> flextable::align(align = "center", part = "header") |> flextable::set_table_properties(layout = "autofit", width = 1)
+```
+
+```{r}
+#| label: fig-structure
+#| fig-cap: !expr paste0("Forest vertical complexity and internal forest gaps at ", smp("nest cells in available forest"), " nest cells (points) and ", fmt(smp("background cells in available forest"), 0), " background cells in available forest, Clayoquot Sound. Boxes span the middle half of the values, the bar marks the median, and whiskers reach the furthest value within 1.5 box lengths.")
+knitr::include_graphics("../03.outputs/figures/F2_structure.png")
+```
+
+## Model evaluation
+
+The Clayoquot Sound model discriminated nest cells from background cells no better than chance (@tbl-evaluation). Its AUC was `r fmt(ev("AUC"))` (95 percent CI `r fmt(ev("AUC", "low"))` to `r fmt(ev("AUC", "high"))`), against `r fmt(ev("AUC", m = "desolation"))` for the Desolation Sound model in its own area and `r fmt(ev("AUC", m = "transferred"))` for that model transferred to Clayoquot Sound, and its Boyce index was `r fmt(ev("Boyce index"))` against `r fmt(ev("Boyce index", m = "desolation"))` and `r fmt(ev("Boyce index", m = "transferred"))`. At the training thresholds, `r ev("Nest cells above threshold")` of `r ev("Nest cells")` held-out nest cells and `r fmt(ev("Background cells above threshold"), 0)` of `r fmt(ev("Background cells"), 0)` background cells were classed as nesting habitat, so the omission error for nests was `r fmt(ev("Omission error, nest"))` and the commission error for nests `r fmt(ev("Commission error, nest"))`, overall accuracy was `r fmt(ev("Overall accuracy"))` (95 percent CI `r fmt(ev("Overall accuracy", "low"))` to `r fmt(ev("Overall accuracy", "high"))`) and kappa `r fmt(ev("Kappa"))` (`r fmt(ev("Kappa", "low"))` to `r fmt(ev("Kappa", "high"))`).
+
+The model did not overfit, its RMSE ratio of `r fmt(ev("RMSE ratio"))` lying below the rejection line of 1.1. The RMSE was `r fmt(ev("RMSE"))`, the mean absolute error `r fmt(ev("MAE"))`, the Brier score `r fmt(ev("Brier score"))` and the relative RMSE `r fmt(ev("Relative RMSE"), 0)`, and Theil's *U* bias of `r fmt(ev("Theil's U bias"))` showed that nearly all of the error was systematic, because predictions averaged `r fmt(ev("Mean prediction"))` while nest cells made up `r fmt(ev("Nest share of cells"), 3)` of all cells. Predictions explained none of the variation in the outcome [*R*² = `r fmt(ev("R2"), 5)`, *F*(`r ev("F statistic", "low")`, `r fmt(ev("F statistic", "high"), 0)`) = `r fmt(ev("F statistic"))`, `r pv(ev("R2", "p_value"))`]. Residuals were spatially autocorrelated [Moran's *I* = `r fmt(ev("Moran's I of residuals"))`, `r pv(ev("Moran's I of residuals", "p_value"))`] but showed no serial correlation along easting [Durbin-Watson = `r fmt(ev("Durbin-Watson"))`, `r pv(ev("Durbin-Watson", "p_value"))`].
+
+```{r}
+#| label: tbl-evaluation
+#| tbl-cap: "Performance of the Clayoquot Sound model on held-out cells pooled over five spatial folds, beside the Desolation Sound model of Cosgrove et al. (2024) in its own area and transferred to Clayoquot Sound. Intervals are 95% confidence intervals. AUC is the area under the receiver operating characteristic curve, RMSE root mean square error and MAE mean absolute error. * P ≤ 0.05, ** P ≤ 0.01, *** P ≤ 0.001, **** P ≤ 0.0001."
+show <- c("AUC" = "AUC", "Boyce index" = "Boyce index", "Overall accuracy" = "Overall accuracy", "Kappa" = "Kappa", "Commission error, nest" = "Commission error, nest", "Omission error, nest" = "Omission error, nest", "Commission error, background" = "Commission error, background", "Omission error, background" = "Omission error, background", "R2" = "R²", "RMSE" = "RMSE", "RMSE ratio" = "RMSE ratio", "Relative RMSE" = "Relative RMSE", "MAE" = "MAE", "Brier score" = "Brier score", "Theil's U bias" = "Theil's U bias", "Moran's I of residuals" = "Moran's I of residuals", "Durbin-Watson" = "Durbin-Watson")
+tbl("T4_evaluation.csv") |>
+  dplyr::filter(metric %in% names(show)) |>
+  dplyr::mutate(cell = paste0(dplyr::if_else(metric == "R2", fmt(value, 5), fmt(value)), dplyr::if_else(is.na(low), "", paste0(" (", fmt(low), " to ", fmt(high), ")")), star(p_value))) |>
+  tidyr::pivot_wider(id_cols = metric, names_from = model, values_from = cell, values_fill = "") |>
+  dplyr::arrange(match(metric, names(show))) |>
+  dplyr::transmute(Measure = show[metric], `Clayoquot Sound, local` = local, `Desolation Sound, own area` = desolation, `Desolation Sound, transferred` = transferred) |>
+  flextable::flextable() |> flextable::align(j = 2:4, align = "right", part = "body") |> flextable::align(align = "center", part = "header") |> flextable::set_table_properties(layout = "autofit", width = 1)
+```
+
+# DISCUSSION
+
+In Clayoquot Sound, a MaxEnt model rebuilt from `r smp("nest cells in available forest")` local nest cells and open 2019 laser scans ranked held-out nest cells above background cells no more often than chance, and its 95 percent interval on AUC took in both chance and the `r fmt(ev("AUC", m = "transferred"))` reached by the same model transferred from Desolation Sound [@cosgrove2024modeling]. The local model therefore did not outperform the borrowed one, and these data could not show that it did worse. In Oregon a locally selected lidar model also improved little on a transferred one, scoring 0.78 against 0.73 [@hagar2018modeling], but there the transferred model was already adequate on 772 surveyed stands, whereas in Clayoquot Sound the local model had too few nests to learn from, and the Oregon local score may have been measured on the data it was fitted to.
+
+The two measures did not relate to nest sites in Clayoquot Sound as they did in Desolation Sound. Internal forest gaps were larger at nest cells than at background cells, the reverse of the negative relation in the Desolation Sound model [@cosgrove2024modeling], and forest vertical complexity hardly differed. Ground plots at the same Clayoquot Sound nests found shorter and less varied canopy at nests than at random sites, while Desolation Sound nests stood in taller and more varied forest, and both relations differed significantly between the two areas [@silvergieter2011patch]. Nest trees in Clayoquot Sound also stood out less from the trees around them, being taller than available trees by 15 percent of their height against 30 percent in Desolation Sound [@silvergieter2011marbled], a smaller contrast that a 1 ha summary of point heights would be less able to detect. If nest-site selection differed between the two sounds in this way, a model built on Desolation Sound relations would be expected to transfer poorly, as it did, and a model of the same form fitted in Clayoquot Sound would have little to separate.
+
+The background cells may explain much of the weak result, because `r fmt(100 * smp("background cells in available forest") / smp("background cells scanned"), 0)` percent of the scanned background cells met the definition of available forest, so nest cells were compared with forest of much the same kind. Waterhouse et al. [-@waterhouse2009using] found aerial survey ranks failing in Clayoquot Sound for this reason, noting that Clayoquot Sound "has experienced far less habitat loss from logging and has more uniform coverage of suitable forest (Zharikov et al. 2006); consequently a higher proportion of random points might fall within suitable nesting habitat, thereby minimizing the differences between nests and random points" [@waterhouse2009using, 90]. The features that decided which stand a bird used may also have lain beyond a 1 ha summary of point heights. Silvergieter and Lank [-@silvergieter2011patch], whose resource selection functions (RSF) at Clayoquot Sound relied on the density of platform trees, noted that "relative numbers of potential nesting platforms, a key requirement of nesting habitat and an important component of RSF models at Clayoquot Sound, cannot be quantitatively measured by remote methods" [@silvergieter2011patch, 15].
+
+Sample size limited the comparison, because with `r smp("nest cells in available forest")` nest cells spread over five folds the 95 percent interval on AUC spanned `r fmt(ev("AUC", "high") - ev("AUC", "low"))`, and because model residuals were spatially autocorrelated the cells were not independent, so the true uncertainty was likely wider still. Nest positions carried an error of about 50 m within 100 m cells [@cooke2022marbled], and the nests were located 17 to 19 years before the scans were flown, so although cells harvested from 1998 onward were removed, other change in the forest could not be measured. The model's error was almost entirely systematic because MaxEnt output on the complementary log-log scale ranked relative suitability and was not scaled to the small share of nest cells in the sample, so the RMSE, Brier score and *R*² described calibration more than discrimination.
+
+For management in Clayoquot Sound, these results did not support replacing the transferred Desolation Sound model, or the provincial habitat model, which placed 69.4 percent of Clayoquot Sound nests in suitable habitat [@burger2018reliability], with a model fitted to the few local nests. Fitting one model to nests pooled across regions with terms for region, as Silvergieter and Lank [-@silvergieter2011patch] did with ground plots, or measuring individual tall trees from the scans, which formed the model of Lamphear et al. [-@lamphear2025marbled], might draw more from open scans than two stand-level measures, and both could be tested with data already public.
+
+# CONCLUSION
+
+Open laser scans flown in 2019 and `r smp("nest cells in available forest")` local nest cells were not enough to build a Marbled Murrelet nesting-habitat model for Clayoquot Sound that separated nests from available forest, and the local model could not be shown to improve on the model transferred from Desolation Sound. Until more nests could be located in Clayoquot Sound, the transferred model, or a model fitted to nests pooled across regions, offered the better-supported basis for mapping nesting habitat there.
 
 # Data availability {.unnumbered}
 
-# References {.unnumbered}
+Every line of code that built, fitted and tested the model is printed in this document and held at https://github.com/seamusrobertmurphy/lidar-marbled-murrelet. Nest locations are public under a CC0 license at the Movebank Data Repository [@cooke2022marbled], point clouds at LidarBC (https://lidar.gov.bc.ca/) under the Open Government Licence British Columbia, and harvest years at the National Terrestrial Ecosystem Monitoring System [@hermosilla2016mass].
+
+# LITERATURE CITED {.unnumbered}

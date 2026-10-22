@@ -5,3 +5,13 @@ library-science,store-q3-murrelet-place,marbled murrelet|brachyramphus marmoratu
 semantic-scholar,s2-q1-murrelet-scan,"(""marbled murrelet"" | ""brachyramphus marmoratus"") + (""airborne laser scanning"" | lidar)",2026-09-28,5,5,3000,FALSE,NA
 semantic-scholar,s2-q2-murrelet-model,"(""marbled murrelet"" | ""brachyramphus marmoratus"") + (""habitat suitability"" | maxent | transferab*)",2026-09-28,21,21,3000,FALSE,NA
 semantic-scholar,s2-q3-murrelet-place,"(""marbled murrelet"" | ""brachyramphus marmoratus"") + (""clayoquot sound"")",2026-09-28,18,18,3000,FALSE,NA
+citation-chase,chase-references,10.5751/ace-02585-190105,2026-10-21,45,45,1000,FALSE,NA
+citation-chase,chase-citations,10.5751/ace-02585-190105,2026-10-21,2,2,1000,FALSE,NA
+citation-chase,chase-references,10.3133/ofr20181035,2026-10-21,0,0,1000,FALSE,no references indexed in Semantic Scholar
+citation-chase,chase-citations,10.3133/ofr20181035,2026-10-21,1,1,1000,FALSE,NA
+citation-chase,chase-references,10.1002/wsb.407,2026-10-21,0,0,1000,FALSE,no references indexed in Semantic Scholar
+citation-chase,chase-citations,10.1002/wsb.407,2026-10-21,16,16,1000,FALSE,NA
+citation-chase,chase-references,10.5751/ACE-00483-060206,2026-10-21,41,41,1000,FALSE,NA
+citation-chase,chase-citations,10.5751/ACE-00483-060206,2026-10-21,6,6,1000,FALSE,NA
+citation-chase,chase-references,10.22230/jem.2018v18n1a593,2026-10-21,0,0,1000,FALSE,no references indexed in Semantic Scholar
+citation-chase,chase-citations,10.22230/jem.2018v18n1a593,2026-10-21,2,2,1000,FALSE,NA
