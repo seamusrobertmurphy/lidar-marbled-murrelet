@@ -12,3 +12,4 @@
 02.inputs/ntems/*.zip
 02.inputs/ntems/CA_*
 02.inputs/derived/thin/
+02.inputs/fwa/*.gpkg

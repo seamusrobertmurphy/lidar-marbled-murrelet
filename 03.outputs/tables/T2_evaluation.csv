@@ -1,4 +1,0 @@
-model,source,auc,auc_low,auc_high,boyce
-"Clayoquot Sound nests, spatial cross-validation",this study,0.5301313038933957,0.38922886919139177,0.6710337385953863,0.1
-"Desolation Sound nests, internal validation",Cosgrove et al. (2024),0.77,NA,NA,0.99
-"Desolation Sound nests, transferred to Clayoquot Sound",Cosgrove et al. (2024),0.63,NA,NA,0.67

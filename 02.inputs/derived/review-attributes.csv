@@ -1,0 +1,3 @@
+variable,measure,expected_direction,reasoning,citation
+fvc,Forest vertical complexity,Positive,"Taller forest with more variable structure was expected to offer more nest platforms and overhead cover, and in Desolation Sound the probability of a nest rose with vertical complexity. Ground plots at Clayoquot Sound nests found shorter and less varied canopy than at random sites, the reverse of Desolation Sound, so the direction is contested for Clayoquot Sound.",cosgrove2024modeling; silvergieter2011patch
+empty_gaps,Internal forest gaps,Negative,"Gaps within and under the canopy were expected to give flight access to nests, but in Desolation Sound the probability of a nest fell as internal gaps increased, the reverse of the expected direction.",cosgrove2024modeling

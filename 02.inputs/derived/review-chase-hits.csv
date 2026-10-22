@@ -1,0 +1,114 @@
+seed,route,doi,title,year,venue
+10.5751/ace-02585-190105,chase-references,10.5751/ace-01883-160204,Marbled Murrelet nest site selection at three fine spatial scales,2021,Avian Conservation and Ecology
+10.5751/ace-02585-190105,chase-references,10.1139/CJFR-2020-0453,Conflicting portrayals of remaining old growth: the British Columbia case,2021,
+10.5751/ace-02585-190105,chase-references,10.1093/FORESTRY/CPAA046,Deriving internal crown geometric features of Douglas-fir from airborne laser scanning in a realized-gain trial,2021,
+10.5751/ace-02585-190105,chase-references,10.1016/J.RSE.2020.112061,lidR: An R package for analysis of Airborne Laser Scanning (ALS) data,2020,
+10.5751/ace-02585-190105,chase-references,10.1111/ddi.12915,Use and categorization of Light Detection and Ranging vegetation metrics in avian diversity and species distribution research,2019,Diversity and Distributions: A journal of biological invasions and biodiversity
+10.5751/ace-02585-190105,chase-references,10.7717/peerj.6281,kuenm: an R package for detailed development of ecological niche models using Maxent,2019,PeerJ
+10.5751/ace-02585-190105,chase-references,10.22230/jem.2018v18n1a593,The Reliability and Application of Methods Used to Predict Suitable Nesting Habitat for Marbled Murrelets,2018,Journal of Ecosystems and Management
+10.5751/ace-02585-190105,chase-references,10.1111/ecog.03470,Why less complexity produces better forecasts: an independent data evaluation of kelp habitat models,2018,Ecography
+10.5751/ace-02585-190105,chase-references,10.1093/bioinformatics/bty633,ape 5.0: an environment for modern phylogenetics and evolutionary analyses in R,2018,Bioinform.
+10.5751/ace-02585-190105,chase-references,10.1002/bimj.201700067,Variable selection – A review and recommendations for the practicing statistician,2018,Biometrical journal. Biometrische Zeitschrift
+10.5751/ace-02585-190105,chase-references,10.1017/9781139028271,Habitat Suitability and Distribution Models: With Applications in R,2017,
+10.5751/ace-02585-190105,chase-references,10.1080/01431161.2016.1252477,Forestry applications of UAVs in Europe: a review,2017,
+10.5751/ace-02585-190105,chase-references,10.1080/07038992.2016.1207484,Remote Sensing Technologies for Enhancing Forest Inventories: A Review,2016,
+10.5751/ace-02585-190105,chase-references,10.1111/JOFO.12150,"Nesting habitat characteristics of Marbled Murrelets occurring in near‐shore waters of the Olympic Peninsula, Washington",2016,
+10.5751/ace-02585-190105,chase-references,10.1016/J.RSE.2014.11.005,An integrated Landsat time series protocol for change detection and generation of annual gap-free surface reflectance composites,2015,
+10.5751/ace-02585-190105,chase-references,NA,Diagnostic Methods for Maxent Models in Ecology,2014,
+10.5751/ace-02585-190105,chase-references,10.1002/WSB.407,Modeling marbled murrelet (Brachyramphus marmoratus) habitat using LiDAR‐derived canopy data,2014,
+10.5751/ace-02585-190105,chase-references,10.1650/CONDOR-13-116.1,Nesting ecology of Marbled Murrelets at a remote mainland fjord in southeast Alaska,2014,
+10.5751/ace-02585-190105,chase-references,10.2478/V10208-011-0016-2,"A strict maximum likelihood explanation of MaxEnt, and some implications for distribution modelling",2013,
+10.5751/ace-02585-190105,chase-references,10.1016/J.RSE.2012.02.001,Lidar sampling for large-area forest characterization: A review,2012,
+10.5751/ace-02585-190105,chase-references,10.1111/j.2041-210X.2011.00172.x,"Selecting pseudo‐absences for species distribution models: how, where and how many?",2012,
+10.5751/ace-02585-190105,chase-references,10.5751/ACE-00483-060206,Patch Scale Nest-Site Selection by Marbled Murrelets ( Brachyramphus marmoratus ),2011,
+10.5751/ace-02585-190105,chase-references,10.5751/ACE-00462-060203,Marbled Murrelets Select Distinctive Nest Trees within Old-Growth Forest Patches,2011,
+10.5751/ace-02585-190105,chase-references,10.1111/j.1472-4642.2010.00725.x,A statistical explanation of MaxEnt for ecologists,2011,
+10.5751/ace-02585-190105,chase-references,10.1111/j.2041-210X.2010.00036.x,The art of modelling range‐shifting species,2010,
+10.5751/ace-02585-190105,chase-references,10.1016/J.BIOCON.2010.07.007,Overcoming the rare species modelling paradox: a novel hierarchical framework applied to an Iberian endemic plant.,2010,
+10.5751/ace-02585-190105,chase-references,10.1016/J.FORECO.2009.07.041,"Forest fragmentation, structure, and age characteristics as a legacy of forest management.",2009,
+10.5751/ace-02585-190105,chase-references,10.22230/jem.2009v10n1a407,New methods for assessing Marbled Murrelet nesting habitat: Air photo interpretation and low-level aerial surveys,2009,Journal of Ecosystems and Management
+10.5751/ace-02585-190105,chase-references,10.22230/jem.2009v10n1a415,"Relationships between habitat area, habitat quality, and populations of nesting Marbled Murrelets",2009,Journal of Ecosystems and Management
+10.5751/ace-02585-190105,chase-references,10.5558/TFC84807-6,The role of LiDAR in sustainable forest management,2008,
+10.5751/ace-02585-190105,chase-references,10.1111/J.2007.0906-7590.05041.X,A null‐model for significance testing of presence‐only species distribution models,2007,
+10.5751/ace-02585-190105,chase-references,10.1111/J.1365-2664.2007.01319.X,"Influence of landscape pattern on breeding distribution and success in a threatened Alcid, the marbled murrelet: model transferability and management implications",2007,
+10.5751/ace-02585-190105,chase-references,10.1016/J.ECOLMODEL.2006.05.017,Evaluating the ability of habitat suitability models to predict species presences,2006,
+10.5751/ace-02585-190105,chase-references,10.1093/bioinformatics/bti623,ROCR: visualizing classifier performance in R,2005,Bioinform.
+10.5751/ace-02585-190105,chase-references,10.2193/0022-541X(2004)068[0318:IBSTRI]2.0.CO;2,INFERRING BREEDING SUCCESS THROUGH RADIOTELEMETRY IN THE MARBLED MURRELET,2004,
+10.5751/ace-02585-190105,chase-references,10.2307/3536744,Behavior of Marbled Murrelets at Nine Nest Sites in Oregon,1995,
+10.5751/ace-02585-190105,chase-references,NA,R Core Team,2021,R: a language and environment for statistical computing
+10.5751/ace-02585-190105,chase-references,NA,Research options to address knowledge gaps on Marbled Murrelet terrestrial habitat requirements. Technical Report 130,2020,/
+10.5751/ace-02585-190105,chase-references,10.1016/j.rse.2019.111499,Incorporating LiDAR metrics into a structure-based habitat model for a canopy-dwelling species,2020,
+10.5751/ace-02585-190105,chase-references,10.3133/OFR20181035,"Modeling habitat for Marbled Murrelets on the Siuslaw National Forest, Oregon, using lidar data",2018,
+10.5751/ace-02585-190105,chase-references,NA,"A fine-scale lidar-based habitat suitability mapping methodology for the marbled murrelet (Brachyramphus marmoratus) on Vancouver Island, British Columbia",2017,
+10.5751/ace-02585-190105,chase-references,NA,dunn.test: Dunn’s test of multiple comparisons using rank sums,2017,cran
+10.5751/ace-02585-190105,chase-references,10.1016/J.GECCO.2015.03.010,"Application of habitat thresholds in conservation: Considerations, limitations, and future directions",2015,
+10.5751/ace-02585-190105,chase-references,NA,Final rule listing the Marbled Murrelet as threatened,1992,Federal Register
+10.5751/ace-02585-190105,chase-references,NA,Overcoming limitations of modeling rare species by ensembles of small models,NA,Methods in Ecology and
+10.5751/ace-02585-190105,chase-citations,10.1038/s43586-025-00446-3,Light detection and ranging of natural systems,2025,Nature Reviews Methods Primers
+10.5751/ace-02585-190105,chase-citations,10.1016/j.jag.2025.104899,Cumulative and component impacts of the human footprint on remotely sensed biodiversity indicators using dissimilarity to high integrity reference states,2025,International Journal of Applied Earth Observation and Geoinformation
+10.3133/ofr20181035,chase-citations,10.5751/ace-02585-190105,"Modeling Marbled Murrelet nesting habitat: a quantitative approach using airborne laser scanning data in British Columbia, Canada",2024,Avian Conservation and Ecology
+10.1002/wsb.407,chase-citations,10.1101/2024.08.13.607789,Marbled murrelet habitat suitability in redwood timberlands of Northern Coastal California utilizing LiDAR-derived individual tree metrics,2024,bioRxiv
+10.1002/wsb.407,chase-citations,10.1016/j.foreco.2023.121376,Assessing biodiversity using forest structure indicators based on airborne laser scanning data,2023,Forest Ecology and Management
+10.1002/wsb.407,chase-citations,10.3389/ffgc.2023.1183509,Modeling decline of mountain range forest using survival analysis,2023,Frontiers in Forests and Global Change
+10.1002/wsb.407,chase-citations,10.1093/forestry/cpad006,"Generating synthetic laser scanning data of forests by combining forest inventory information, a tree point cloud database and an open-source laser scanning simulator",2023,Forestry: An International Journal of Forest Research
+10.1002/wsb.407,chase-citations,10.1109/AIPR57179.2022.10092215,AI Augmentation to Remote Sensing Imagery in Forestry Conservation & Restoration for Increased Responsive Capabilities,2022,International Conference on Artificial Intelligence and Pattern Recognition
+10.1002/wsb.407,chase-citations,10.1002/JWMG.21632,Activity center selection by northern spotted owls,2019,Journal of Wildlife Management
+10.1002/wsb.407,chase-citations,10.1016/J.FORECO.2018.08.040,Usability of citizen science observations together with airborne laser scanning data in determining the habitat preferences of forest birds,2018,Forest Ecology and Management
+10.1002/wsb.407,chase-citations,10.22230/jem.2018v18n1a593,The Reliability and Application of Methods Used to Predict Suitable Nesting Habitat for Marbled Murrelets,2018,Journal of Ecosystems and Management
+10.1002/wsb.407,chase-citations,10.70675/80fbf54az4e30z4570z8dd7z786eef8065a7,Déterminants de la structure et de la dynamique des forêts tropicales à l'échelle du paysage,2015,
+10.1002/wsb.407,chase-citations,10.1080/15230406.2015.1020025,Recent literature in cartography and geographic information science,2015,
+10.1002/wsb.407,chase-citations,10.1016/J.TREE.2014.10.005,Advances in animal ecology from 3D-LiDAR ecosystem mapping.,2014,Trends in Ecology & Evolution
+10.1002/wsb.407,chase-citations,10.1080/15230406.2013.878099,Recent literature in cartography and geographic information science,2014,
+10.1002/wsb.407,chase-citations,10.5751/ace-02585-190105,"Modeling Marbled Murrelet nesting habitat: a quantitative approach using airborne laser scanning data in British Columbia, Canada",2024,Avian Conservation and Ecology
+10.1002/wsb.407,chase-citations,10.1016/j.rse.2019.111499,Incorporating LiDAR metrics into a structure-based habitat model for a canopy-dwelling species,2020,
+10.1002/wsb.407,chase-citations,NA,USING LIDAR DATA TO QUANTIFY FOREST STRUCTURAL HABITAT VARIABLES IMPORTANT TO FISHERS AND MARTENS,2018,
+10.1002/wsb.407,chase-citations,10.1002/JWMG.21173,High‐resolution habitat modeling with airborne LiDAR for red tree voles,2017,
+10.5751/ACE-00483-060206,chase-references,10.5751/ACE-00462-060203,Marbled Murrelets Select Distinctive Nest Trees within Old-Growth Forest Patches,2011,
+10.5751/ACE-00483-060206,chase-references,10.1898/NWN08-50.1,Re-Use of Nest Sites by Marbled Murrelets (Brachyramphus marmoratus) in British Columbia,2009,
+10.5751/ACE-00483-060206,chase-references,10.1111/j.1365-2656.2008.01506.x,Habitat structure mediates predation risk for sedentary prey: experimental tests of alternative hypotheses.,2009,Journal of Animal Ecology
+10.5751/ACE-00483-060206,chase-references,10.22230/jem.2009v10n1a413,Using the low-level aerial survey method to identify Marbled Murrelet nesting habitat,2009,Journal of Ecosystems and Management
+10.5751/ACE-00483-060206,chase-references,10.22230/jem.2009v10n1a415,"Relationships between habitat area, habitat quality, and populations of nesting Marbled Murrelets",2009,Journal of Ecosystems and Management
+10.5751/ACE-00483-060206,chase-references,10.22230/jem.2009v10n1a407,New methods for assessing Marbled Murrelet nesting habitat: Air photo interpretation and low-level aerial surveys,2009,Journal of Ecosystems and Management
+10.5751/ACE-00483-060206,chase-references,10.2193/2006-565,Predictive Model of Habitat Suitability for the Marbled Murrelet in Western Washington,2008,
+10.5751/ACE-00483-060206,chase-references,10.22230/jem.2008v9n1a381,Using air photos to interpret quality of Marbled Murrelet nesting habitat in south coastal British Columbia,2008,Journal of Ecosystems and Management
+10.5751/ACE-00483-060206,chase-references,10.1111/J.1365-2664.2007.01319.X,"Influence of landscape pattern on breeding distribution and success in a threatened Alcid, the marbled murrelet: model transferability and management implications",2007,
+10.5751/ACE-00483-060206,chase-references,10.1648/0273-8570-76.4.357,Breeding chronology of Marbled Murrelets varies between coastal and inshore sites in southern British Columbia,2005,
+10.5751/ACE-00483-060206,chase-references,10.2193/0022-541X(2004)068[0318:IBSTRI]2.0.CO;2,INFERRING BREEDING SUCCESS THROUGH RADIOTELEMETRY IN THE MARBLED MURRELET,2004,
+10.5751/ACE-00483-060206,chase-references,10.2307/3802723,Model selection and multimodel inference : a practical information-theoretic approach,2003,
+10.5751/ACE-00483-060206,chase-references,10.1642/0004-8038(2001)118[1036:IVICDO]2.0.CO;2,Intraspecific Variation in Commuting Distance of Marbled Murrelets (Brachyramphus marmoratus): Ecological and Energetic Consequences of Nesting Further Inland,2001,
+10.5751/ACE-00483-060206,chase-references,10.1642/0004-8038(2001)118[0557:HSSIAE]2.0.CO;2,Habitat Selection Studies in Avian Ecology: A Critical Review,2001,
+10.5751/ACE-00483-060206,chase-references,10.2307/3803021,Using radar to estimate populations and assess habitat associations of marbled murrelets,2001,
+10.5751/ACE-00483-060206,chase-references,10.1650/0010-5422(2000)102[0915:COCFAI]2.0.CO;2,COMPARISON OF COASTAL FRINGE AND INTERIOR FORESTS AS RESERVES FOR MARBLED MURRELETS ON VANCOUVER ISLAND,2000,
+10.5751/ACE-00483-060206,chase-references,10.1080/00401706.2000.10486013,Analysis of Incomplete Multivariate Data,2000,Technometrics
+10.5751/ACE-00483-060206,chase-references,10.2307/1311947,Nest Predation and Nest SitesNew perspectives on old patterns,1993,
+10.5751/ACE-00483-060206,chase-references,10.1093/BIOMET/78.3.691,A note on a general definition of the coefficient of determination,1991,
+10.5751/ACE-00483-060206,chase-references,10.1080/00224065.1986.11978989,Applied Linear Statistical Models,1975,
+10.5751/ACE-00483-060206,chase-references,NA,Multi-scale analyses of nest site selection and fledging success by marbled murrelets (Brachyramphus marmoratus) in British Columbia,2009,
+10.5751/ACE-00483-060206,chase-references,10.3133/OFR20061387,Status Review of the Marbled Murrelet (Brachyramphus marmoratus) in Alaska and British Columbia,2007,
+10.5751/ACE-00483-060206,chase-references,10.1648/0273-8570-75.1.53,"Inland habitat associations of Marbled Murrelets on southwest Vancouver Island, British Columbia",2004,
+10.5751/ACE-00483-060206,chase-references,NA,Habitat Suitability Mapping for Marbled Murrelets in Clayoquot Sound,2003,
+10.5751/ACE-00483-060206,chase-references,NA,"MINISTRY OF WATER, LAND AND AIR PROTECTION",2002,
+10.5751/ACE-00483-060206,chase-references,NA,"Estimating Nest Densities for Marbled Murrelets in Three Habitat Suitability Categories in the Ursus Valley, Clayoquot Sound",2002,
+10.5751/ACE-00483-060206,chase-references,NA,"Breeding ecology of radio-marked Marbled Murrelets, Brachyramphus marmoratus, in Desolation Sound, British Columbia",2002,
+10.5751/ACE-00483-060206,chase-references,NA,Inland Habitat Suitability for the Marbled Murrelet in Southcentral Alaska,2000,
+10.5751/ACE-00483-060206,chase-references,NA,Marbled Murrelet Inland Patterns of Activity : Defining Detections and Behavior,2000,
+10.5751/ACE-00483-060206,chase-references,NA,Inland Habitat Associations of Marbled Murrelets in Western Washington,2000,
+10.5751/ACE-00483-060206,chase-references,NA,Marbled Murrelet Habitat Associations in Oregon,1995,
+10.5751/ACE-00483-060206,chase-references,10.1007/978-94-011-1558-2,Resource Selection by Animals,1993,Springer Netherlands
+10.5751/ACE-00483-060206,chase-references,NA,"Conservation assessment of Marbled Murrelets in British Columbia: a review of the biology, populations, habitat associations, and conservation",2002,Environmental Conservation Branch
+10.5751/ACE-00483-060206,chase-references,NA,"Use of Airphotos to Identify , Describe , and Manage Forest Structure of Marbled Murrelet Nesting Habitat at a Coastal British Columbia Site",NA,
+10.5751/ACE-00483-060206,chase-references,NA,Inland activity and forest structural characteristics as indicators of Marbled Murrelet nesting habitat in Clayoquot Sound,2002,"Multi - scale studies of populations , distribution and habitat associations of Marbled Murrelets in Clayoquot Sound"
+10.5751/ACE-00483-060206,chase-references,NA,Using Airphotos to Interpret Marbled Murrelet Nesting Habitat in British Columbia : Application of a Preliminary Classification Scheme,NA,
+10.5751/ACE-00483-060206,chase-references,NA,Characteristics of Marbled Murrelet nest trees and nesting stands,1995,
+10.5751/ACE-00483-060206,chase-references,NA,"Habitat selectivity and breeding success in a forest-nesting alcid, the Marbled Murrelet, in two landscapes with different logging histories in British Columbia",2006,Canada. Landscape Ecology
+10.5751/ACE-00483-060206,chase-references,NA,Evaluation report for the 5 year status review of the Marbled Murrelet in Washington,2004,Oregon and California. Prepared for the U.S. Fish and Wildlife Service
+10.5751/ACE-00483-060206,chase-references,NA,Marbled Murrelet (Brachyramphus marmoratus): 5-year review. Washington Fish and Wildlife Office,2009,
+10.5751/ACE-00483-060206,chase-references,NA,Government of British Columbia,NA,
+10.5751/ACE-00483-060206,chase-citations,10.5751/ace-01883-160204,Marbled Murrelet nest site selection at three fine spatial scales,2021,Avian Conservation and Ecology
+10.5751/ACE-00483-060206,chase-citations,10.1007/s10980-017-0543-6,Stop using dichotomous terms to reference observations of scale-dependent habitat selection,2017,Landscape Ecology
+10.5751/ACE-00483-060206,chase-citations,10.1111/JOFO.12150,"Nesting habitat characteristics of Marbled Murrelets occurring in near‐shore waters of the Olympic Peninsula, Washington",2016,
+10.5751/ACE-00483-060206,chase-citations,10.1080/00063657.2012.724050,Factors affecting reproduction of Woodpigeons Columba palumbus in North African forests: 1. Nest habitat selection,2012,
+10.5751/ACE-00483-060206,chase-citations,10.5751/ace-02585-190105,"Modeling Marbled Murrelet nesting habitat: a quantitative approach using airborne laser scanning data in British Columbia, Canada",2024,Avian Conservation and Ecology
+10.5751/ACE-00483-060206,chase-citations,10.1016/J.ACTAO.2016.12.003,Nest-niche differentiation in two sympatric columbid species from a Mediterranean Tetraclinis woodland: Considerations for forest management,2017,
+10.22230/jem.2018v18n1a593,chase-citations,10.5751/ace-02585-190105,"Modeling Marbled Murrelet nesting habitat: a quantitative approach using airborne laser scanning data in British Columbia, Canada",2024,Avian Conservation and Ecology
+10.22230/jem.2018v18n1a593,chase-citations,10.1007/978-3-030-23633-5_2,The Importance of Reproduction for the Conservation of Slow-Growing Animal Populations.,2019,Advances in Experimental Medicine and Biology
