@@ -7,3 +7,8 @@
 
 /05.tasks/
 05.tasks/
+02.inputs/movebank/*.csv
+02.inputs/lidarbc/laz/
+02.inputs/ntems/*.zip
+02.inputs/ntems/CA_*
+02.inputs/derived/thin/

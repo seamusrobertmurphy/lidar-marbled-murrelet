@@ -1,5 +1,5 @@
 ---
-title: "Lidar marbled murrelet"
+title: "Mapping marbled murrelet nesting habitat from open airborne laser scanning in Clayoquot Sound, British Columbia"
 subtitle: ""
 author:
     - name: Murphy, S
@@ -48,7 +48,17 @@ citeproc: true
 editor: visual
 bibliography: ../04.references/references.bib
 csl: ../04.references/springer-basic-author-date.csl
-keywords: []
+keywords:
+  - marbled murrelet
+  - Brachyramphus marmoratus
+  - nesting habitat
+  - airborne laser scanning
+  - lidar
+  - habitat suitability
+  - MaxEnt
+  - model transferability
+  - old-growth forest
+  - Clayoquot Sound
 ---
 
 ```{r}
@@ -81,6 +91,351 @@ build_once <- function(path, code) {
 # Introduction
 
 # Methods
+
+## Literature review
+
+```{r}
+#| label: review-terms
+#| echo: true
+if (!file.exists("../04.references/review/search-terms.csv")) {
+  front <- rmarkdown::yaml_front_matter(knitr::current_input())
+  small <- c("a", "an", "and", "as", "at", "by", "do", "does", "for", "from", "how", "in", "into", "is", "its", "of", "on", "or", "the", "to", "under", "using", "versus", "what", "why", "with")
+  phrases <- \(x) x |>
+    stringr::str_to_lower() |>
+    stringr::str_remove_all("[*_]") |>
+    stringr::str_replace_all("[^[:alnum:][:space:]-]", " | ") |>
+    stringr::str_replace_all(paste0("\\b(", paste(small, collapse = "|"), ")\\b"), " | ") |>
+    stringr::str_split_1("\\|") |>
+    stringr::str_squish() |>
+    purrr::keep(\(p) nchar(p) > 2)
+  dir.create("../04.references/review", recursive = TRUE, showWarnings = FALSE)
+  dplyr::bind_rows(
+    tibble::tibble(term = stringr::str_squish(stringr::str_to_lower(unlist(stringr::str_split(unlist(front$keywords), "[;,]")))), source = "keywords"),
+    tibble::tibble(term = phrases(front$title), source = "title"),
+    tibble::tibble(term = phrases(front$subtitle %||% ""), source = "subtitle")
+  ) |>
+    dplyr::distinct(term, .keep_all = TRUE) |>
+    dplyr::mutate(question = NA, concept = NA) |>
+    readr::write_csv("../04.references/review/search-terms.csv", na = "")
+}
+```
+
+```{r}
+#| label: review-queries
+#| echo: true
+front <- rmarkdown::yaml_front_matter(knitr::current_input())
+declared <- paste(front$title, front$subtitle, paste(unlist(front$keywords), collapse = " ")) |>
+  stringr::str_remove_all("[*_]") |>
+  stringr::str_to_lower()
+term_regex <- \(x) if (stringr::str_ends(x, "\\*")) paste0("\\b", stringr::str_escape(stringr::str_remove(x, "\\*$"))) else paste0("\\b", stringr::str_escape(x), "\\b")
+terms <- readr::read_csv("../04.references/review/search-terms.csv", col_types = readr::cols(.default = "c")) |>
+  dplyr::filter(!is.na(question), !is.na(concept)) |>
+  dplyr::mutate(term = stringr::str_to_lower(term)) |>
+  tidyr::separate_longer_delim(question, " ")
+stray <- terms$term[!purrr::map_lgl(terms$term, \(x) stringr::str_detect(declared, term_regex(x)))]
+if (nrow(terms) == 0) stop("No search terms selected in 04.references/review/search-terms.csv")
+if (length(stray) > 0) stop("Not in the title, subtitle or keywords: ", paste(unique(stray), collapse = ", "))
+queries <- terms |>
+  dplyr::summarise(.by = c(question, concept), group = paste(term, collapse = "|")) |>
+  dplyr::summarise(.by = question, route = paste(c(dplyr::first(question), concept), collapse = "-"), concepts = paste(group, collapse = " AND "))
+```
+
+```{r}
+#| label: review-store
+#| echo: true
+if (!file.exists("../02.inputs/derived/review-store-hits.csv")) {
+  # library-science manifest, https://github.com/seamusrobertmurphy/library-science/blob/main/library/manifest.csv
+  manifest <- readr::read_csv("../../library-science/library/manifest.csv", show_col_types = FALSE)
+  # library-science source notes, https://github.com/seamusrobertmurphy/library-science/tree/main/sources
+  notes <- tibble::tibble(path = list.files("../../library-science/sources", "\\.md$", full.names = TRUE)) |>
+    dplyr::mutate(key = tools::file_path_sans_ext(basename(path)), note = purrr::map_chr(path, \(p) paste(readLines(p, warn = FALSE), collapse = " ")))
+  store <- manifest |>
+    dplyr::filter(status %in% c("verified", "filed", "unverified"), !is.na(title) | !is.na(key)) |>
+    dplyr::left_join(dplyr::select(notes, key, note), by = "key") |>
+    dplyr::mutate(text = stringr::str_to_lower(paste(title, note)))
+  hits <- queries |>
+    purrr::pmap(\(question, route, concepts) {
+      groups <- stringr::str_split_1(concepts, " AND ")
+      term <- \(x) if (stringr::str_ends(x, "\\*")) paste0(stringr::str_remove(x, "\\*$"), "\\w*") else paste0(x, "\\b")
+      patterns <- purrr::map_chr(groups, \(g) paste0("\\b(", paste(purrr::map_chr(stringr::str_split_1(g, "\\|"), term), collapse = "|"), ")"))
+      keep <- purrr::map(patterns, \(r) stringr::str_detect(store$text, r)) |> purrr::reduce(`&`)
+      store[keep, ] |> dplyr::transmute(question, route = paste0("store-", route), key, doi, title, year, venue = container, source_note = dplyr::if_else(has_source_note == "yes", key, NA))
+    }) |>
+    purrr::list_rbind()
+  readr::write_csv(hits, "../02.inputs/derived/review-store-hits.csv")
+  queries |>
+    dplyr::transmute(strand = "library-science", route = paste0("store-", route), query = concepts, date = as.character(Sys.Date())) |>
+    dplyr::left_join(dplyr::count(hits, route, name = "retrieved"), by = "route") |>
+    dplyr::mutate(retrieved = tidyr::replace_na(retrieved, 0L), reported_total = retrieved, cap = NA, capped = FALSE, error = NA) |>
+    readr::write_csv("../02.inputs/derived/review-search-log.csv")
+}
+```
+
+```{r}
+#| label: review-semantic-scholar
+#| echo: true
+if (!file.exists("../02.inputs/derived/review-s2-hits.csv")) {
+  search_s2 <- function(question, route, concepts, cap = 3000) {
+    query <- stringr::str_split_1(concepts, " AND ") |>
+      purrr::map_chr(\(g) paste0("(", paste(purrr::map_chr(stringr::str_split_1(g, "\\|"), \(x) if (grepl(" ", x)) paste0('"', x, '"') else x), collapse = " | "), ")")) |>
+      paste(collapse = " + ")
+    papers <- list(); token <- NULL; total <- NA
+    repeat {
+      # Semantic Scholar Academic Graph bulk search, https://api.semanticscholar.org/api-docs/graph#tag/Paper-Data/operation/get_graph_paper_bulk_search
+      body <- httr2::request("https://api.semanticscholar.org/graph/v1/paper/search/bulk") |>
+        httr2::req_url_query(query = query, fields = "title,year,venue,externalIds,citationCount,publicationTypes", token = token) |>
+        httr2::req_retry(max_tries = 6) |>
+        httr2::req_perform() |>
+        httr2::resp_body_json()
+      total <- body$total; token <- body$token
+      papers <- c(papers, body$data)
+      if (is.null(token) || length(papers) >= cap) break
+    }
+    works <- papers |>
+      purrr::map(\(w) tibble::tibble(doi = w$externalIds$DOI %||% NA_character_, title = w$title %||% NA_character_, year = w$year %||% NA_integer_, venue = w$venue %||% NA_character_, type = paste(unlist(w$publicationTypes), collapse = " "), citations = w$citationCount %||% NA_integer_)) |>
+      purrr::list_rbind()
+    list(hits = dplyr::mutate(works, question, route = paste0("s2-", route), .before = 1),
+         log = tibble::tibble(strand = "semantic-scholar", route = paste0("s2-", route), query, date = as.character(Sys.Date()), retrieved = nrow(works), reported_total = total, cap, capped = total > cap, error = NA))
+  }
+  runs <- purrr::pmap(queries, search_s2)
+  readr::write_csv(purrr::map(runs, "hits") |> purrr::list_rbind(), "../02.inputs/derived/review-s2-hits.csv")
+  readr::read_csv("../02.inputs/derived/review-search-log.csv", col_types = readr::cols(.default = "c")) |>
+    dplyr::bind_rows(purrr::map(runs, "log") |> purrr::list_rbind() |> dplyr::mutate(dplyr::across(dplyr::everything(), as.character))) |>
+    readr::write_csv("../02.inputs/derived/review-search-log.csv")
+}
+```
+
+```{r}
+#| label: review-records
+#| echo: true
+if (!file.exists("../02.inputs/derived/review-records.csv")) {
+  dplyr::bind_rows(
+    readr::read_csv("../02.inputs/derived/review-store-hits.csv", col_types = readr::cols(.default = "c")),
+    readr::read_csv("../02.inputs/derived/review-s2-hits.csv", col_types = readr::cols(.default = "c"))
+  ) |>
+    dplyr::mutate(id = dplyr::coalesce(stringr::str_to_lower(doi), stringr::str_squish(stringr::str_to_lower(stringr::str_replace_all(title, "[^[:alnum:] ]", " "))))) |>
+    dplyr::summarise(.by = id, doi = dplyr::first(stats::na.omit(doi)), title = dplyr::first(title), year = dplyr::first(stats::na.omit(year)), venue = dplyr::first(stats::na.omit(venue)), questions = paste(sort(unique(question)), collapse = " "), routes = paste(sort(unique(route)), collapse = " "), duplicates_merged = dplyr::n(), key = dplyr::first(stats::na.omit(key)), source_note = dplyr::first(stats::na.omit(source_note))) |>
+    dplyr::mutate(decision = NA, reason = NA, full_text = NA) |>
+    readr::write_csv("../02.inputs/derived/review-records.csv", na = "")
+}
+```
+
+```{r}
+#| label: review-chase
+#| echo: true
+central <- c()
+if (length(central) > 0 && !file.exists("../02.inputs/derived/review-chase-hits.csv")) {
+  chase <- function(seed_doi, direction) {
+    # Semantic Scholar Academic Graph references and citations, https://api.semanticscholar.org/api-docs/graph#tag/Paper-Data
+    resp <- httr2::request(paste0("https://api.semanticscholar.org/graph/v1/paper/DOI:", seed_doi, "/", direction)) |>
+      httr2::req_url_query(fields = "title,year,venue,externalIds", limit = 1000) |>
+      httr2::req_retry(max_tries = 6) |>
+      httr2::req_error(is_error = \(r) FALSE) |>
+      httr2::req_perform()
+    if (httr2::resp_status(resp) != 200) return(tibble::tibble(seed = seed_doi, route = paste0("chase-", direction), error = httr2::resp_status_desc(resp)))
+    key <- if (direction == "references") "citedPaper" else "citingPaper"
+    httr2::resp_body_json(resp)$data |>
+      purrr::map(\(w) tibble::tibble(doi = w[[key]]$externalIds$DOI %||% NA_character_, title = w[[key]]$title %||% NA_character_, year = w[[key]]$year %||% NA_integer_, venue = w[[key]]$venue %||% NA_character_)) |>
+      purrr::list_rbind() |>
+      dplyr::mutate(seed = seed_doi, route = paste0("chase-", direction), .before = 1)
+  }
+  tidyr::expand_grid(seed_doi = central, direction = c("references", "citations")) |>
+    purrr::pmap(chase) |>
+    purrr::list_rbind() |>
+    readr::write_csv("../02.inputs/derived/review-chase-hits.csv")
+}
+```
+
+```{r}
+#| label: review-counts
+#| echo: true
+records <- readr::read_csv("../02.inputs/derived/review-records.csv", show_col_types = FALSE)
+search_log <- readr::read_csv("../02.inputs/derived/review-search-log.csv", show_col_types = FALSE)
+review_counts <- tibble::tibble(
+  Stage = c("Records retrieved", "Unique after removing duplicates", "Excluded on title and abstract", "Read in full", "Retained"),
+  Records = c(sum(search_log$retrieved), nrow(records), sum(records$decision == "exclude" & records$full_text != "yes", na.rm = TRUE), sum(records$full_text == "yes", na.rm = TRUE), sum(records$decision == "include", na.rm = TRUE))
+)
+review_reasons <- records |>
+  dplyr::filter(decision == "exclude") |>
+  dplyr::count(reason, name = "Records", sort = TRUE)
+```
+
+## Nest data
+
+```{r}
+#| label: nests
+# Marbled Murrelets at Clayoquot Sound, British Columbia, Canada (2000-2002), CS_nests.csv
+# https://doi.org/10.5441/001/1.kg210889
+build_once("../02.inputs/movebank/CS_nests.csv", curl::curl_download(
+  "https://datarepository.movebank.org/server/api/core/bitstreams/1504af80-ae53-4e69-a6f6-3b2ce5d53958/content",
+  "../02.inputs/movebank/CS_nests.csv"))
+nests <- readr::read_csv("../02.inputs/movebank/CS_nests.csv", show_col_types = FALSE) |>
+  sf::st_as_sf(coords = c("Long", "Lat"), crs = 4326) |>
+  sf::st_transform(3157)
+```
+
+## Laser scans
+
+```{r}
+#| label: tiles
+# LidarBC Open LiDAR Data Index, point cloud layer
+# https://services6.arcgis.com/ubm4tcTYICKBpist/arcgis/rest/services/LiDAR_BC_S3_Public/FeatureServer/4
+build_once("../02.inputs/lidarbc/tiles.gpkg", {
+  area <- nests |> sf::st_union() |> sf::st_convex_hull() |> sf::st_buffer(5000)
+  query <- paste0(
+    "https://services6.arcgis.com/ubm4tcTYICKBpist/arcgis/rest/services/LiDAR_BC_S3_Public/",
+    "FeatureServer/4/query?where=year%3D2019&geometryType=esriGeometryEnvelope&inSR=4326",
+    "&outFields=filename,s3Url&f=geojson&geometry=",
+    area |> sf::st_transform(4326) |> sf::st_bbox() |> paste(collapse = ","))
+  set.seed(2019)
+  purrr::map(0:5, \(i) sf::read_sf(paste0(query, "&resultOffset=", i * 1000))) |>
+    dplyr::bind_rows() |>
+    sf::st_transform(3157) |>
+    dplyr::filter(lengths(sf::st_intersects(sf::st_centroid(geometry), area)) > 0) |>
+    dplyr::mutate(
+      nest = lengths(sf::st_intersects(geometry, sf::st_buffer(nests, 150))) > 0,
+      background = dplyr::row_number() %in% sample(which(!nest), 40)) |>
+    sf::write_sf("../02.inputs/lidarbc/tiles.gpkg")
+})
+tiles <- sf::read_sf("../02.inputs/lidarbc/tiles.gpkg")
+```
+
+```{r}
+#| label: laz
+# LidarBC 2019 point clouds, https://lidar.gov.bc.ca/
+dir.create("../02.inputs/lidarbc/laz", showWarnings = FALSE)
+tiles |>
+  sf::st_drop_geometry() |>
+  dplyr::filter(nest | background) |>
+  purrr::pwalk(\(filename, s3Url, ...) {
+    laz <- file.path("../02.inputs/lidarbc/laz", filename)
+    build_once(laz, curl::curl_download(s3Url, laz))
+  })
+```
+
+```{r}
+#| label: thin
+dir.create("../02.inputs/derived/thin", recursive = TRUE, showWarnings = FALSE)
+list.files("../02.inputs/lidarbc/laz", "laz$") |>
+  purrr::walk(\(f) build_once(file.path("../02.inputs/derived/thin", f), {
+    h <- lidR::readLASheader(file.path("../02.inputs/lidarbc/laz", f))
+    keep <- min(1, 15 * (h$`Max X` - h$`Min X`) * (h$`Max Y` - h$`Min Y`) /
+      h$`Number of point records`)
+    las <- lidR::readLAS(file.path("../02.inputs/lidarbc/laz", f), select = "xyzc",
+        filter = paste("-drop_class 7 -drop_withheld -keep_random_fraction", keep)) |>
+      lidR::decimate_points(lidR::homogenize(12, 10))
+    if (!lidR::is.empty(las)) {
+      lidR::writeLAS(las, file.path("../02.inputs/derived/thin", f))
+      rlas::writelax(file.path("../02.inputs/derived/thin", f))
+    }
+  }))
+```
+
+## Harvest screen
+
+```{r}
+#| label: ntems
+# Canada Forest Harvest 1985-2022, National Terrestrial Ecosystem Monitoring System
+# https://opendata.nfis.org/downloads/forest_change/CA_Forest_Harvest_1985-2022.zip
+build_once("../02.inputs/ntems/harvest_cs.tif", {
+  curl::curl_download(
+    "https://opendata.nfis.org/downloads/forest_change/CA_Forest_Harvest_1985-2022.zip",
+    "../02.inputs/ntems/CA_Forest_Harvest_1985-2022.zip")
+  unzip("../02.inputs/ntems/CA_Forest_Harvest_1985-2022.zip", exdir = "../02.inputs/ntems")
+  harvest <- list.files("../02.inputs/ntems", "\\.tif$", recursive = TRUE, full.names = TRUE)[1] |>
+    terra::rast()
+  terra::crop(harvest, tiles |> sf::st_transform(terra::crs(harvest)) |> terra::vect(),
+    filename = "../02.inputs/ntems/harvest_cs.tif")
+})
+```
+
+## Forest structure
+
+```{r}
+#| label: metrics
+structure_metrics <- function(X, Y, Z) {
+  voxels <- unique(data.table::data.table(x = floor(X), y = floor(Y), z = floor(Z)))
+  columns <- voxels[, list(n = .N, top = max(z)), by = c("x", "y")]
+  list(
+    fh = quantile(Z, 0.95),
+    fvc = sd(Z),
+    empty_gaps = sum(columns$top + 1 - columns$n),
+    cover = nrow(columns) / 1e4,
+    density = length(Z) / 1e4)
+}
+build_once("../02.inputs/derived/metrics.tif", {
+  ctg <- lidR::readLAScatalog("../02.inputs/derived/thin")
+  lidR::opt_chunk_size(ctg) <- 1000
+  lidR::opt_chunk_buffer(ctg) <- 20
+  lidR::opt_chunk_alignment(ctg) <- c(0, 0)
+  lidR::opt_stop_early(ctg) <- FALSE
+  lidR::opt_progress(ctg) <- FALSE
+  lidR::catalog_map(ctg, \(las) las |>
+      lidR::normalize_height(lidR::tin()) |>
+      lidR::filter_poi(Z >= 0, Z < 100) |>
+      lidR::pixel_metrics(~structure_metrics(X, Y, Z), res = 100, start = c(0, 0))) |>
+    terra::writeRaster("../02.inputs/derived/metrics.tif")
+})
+```
+
+## Available forest
+
+```{r}
+#| label: cells
+metrics <- terra::rast("../02.inputs/derived/metrics.tif")
+cells <- terra::rast("../02.inputs/ntems/harvest_cs.tif") |>
+  (\(r) terra::project(r >= 1998, metrics, method = "max"))() |>
+  stats::setNames("cut") |>
+  c(metrics) |>
+  terra::as.data.frame(xy = TRUE, cells = TRUE) |>
+  dplyr::mutate(
+    forest = dplyr::coalesce(fh >= 20 & cover >= 0.9 & density >= 10 & dplyr::coalesce(cut, 0) == 0, FALSE),
+    nest = cell %in% terra::cellFromXY(metrics, sf::st_coordinates(nests)),
+    background = !nest & lengths(sf::st_intersects(
+      sf::st_as_sf(dplyr::pick(x, y), coords = c("x", "y"), crs = 3157),
+      dplyr::filter(tiles, background))) > 0)
+build_once("../03.outputs/tables/T1_sample.csv", tibble::tibble(
+  step = c("nests in file", "nest cells scanned", "nest cells in available forest",
+    "background cells scanned", "background cells in available forest"),
+  n = c(nrow(nests), sum(cells$nest & !is.na(cells$fh)), sum(cells$nest & cells$forest),
+    sum(cells$background & !is.na(cells$fh)), sum(cells$background & cells$forest))) |>
+  readr::write_csv("../03.outputs/tables/T1_sample.csv"))
+```
+
+## Model fitting
+
+```{r}
+#| label: model
+sample <- cells |>
+  dplyr::filter(forest, nest | background) |>
+  dplyr::mutate(p = as.integer(nest))
+folds <- sample |>
+  sf::st_as_sf(coords = c("x", "y"), crs = 3157) |>
+  blockCV::cv_spatial(column = "p", k = 5, size = 10000, selection = "random",
+    seed = 2019, plot = FALSE, progress = FALSE, report = FALSE)
+fit_maxent <- function(d) {
+  x <- as.data.frame(d[c("fvc", "empty_gaps")])
+  maxnet::maxnet(d$p, x, maxnet::maxnet.formula(d$p, x, classes = "lp"), regmult = 0.2)
+}
+held_out <- purrr::map(1:5, \(k) sample[folds$folds_ids == k, ] |>
+    dplyr::mutate(pred = predict(fit_maxent(sample[folds$folds_ids != k, ]),
+      as.data.frame(dplyr::pick(fvc, empty_gaps)), type = "cloglog")[, 1])) |>
+  purrr::list_rbind()
+roc <- pROC::roc(held_out$p, held_out$pred, quiet = TRUE)
+# Desolation Sound scores from the abstract of Cosgrove et al. (2024)
+# https://doi.org/10.5751/ACE-02585-190105
+build_once("../03.outputs/tables/T2_evaluation.csv", tibble::tibble(
+  model = c("Clayoquot Sound nests, spatial cross-validation",
+    "Desolation Sound nests, internal validation",
+    "Desolation Sound nests, transferred to Clayoquot Sound"),
+  source = c("this study", "Cosgrove et al. (2024)", "Cosgrove et al. (2024)"),
+  auc = c(as.numeric(pROC::auc(roc)), 0.77, 0.63),
+  auc_low = c(pROC::ci.auc(roc)[1], NA, NA),
+  auc_high = c(pROC::ci.auc(roc)[3], NA, NA),
+  boyce = c(ecospat::ecospat.boyce(held_out$pred[held_out$p == 0],
+    held_out$pred[held_out$p == 1], PEplot = FALSE)$cor, 0.99, 0.67)) |>
+  readr::write_csv("../03.outputs/tables/T2_evaluation.csv"))
+```
 
 # Results
 
