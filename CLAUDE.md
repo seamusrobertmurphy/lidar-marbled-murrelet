@@ -6,6 +6,12 @@ These hold for every session in this repository, alongside the global rules in `
 
 Every line of code that builds, samples, processes, fits, tests or draws any part of the analysis is a chunk in `01.manuscript/lidar-marbled-murrelet.qmd`, shown with `echo: true`. A script anywhere else does not count, and an output whose code is not in the manuscript is not evidence and is not cited. A chunk that writes a file to `03.outputs/` wraps that work in `build_once()`, defined in the `setup` chunk, so a render rebuilds the output only when it is missing.
 
+On 2026-10-22 Seamus asked, in the words "hide the code cells in the docx render", for the Word render to leave the code out. A knitr option hook in the `setup` chunk sets `echo` to false when the output is docx, and the html render still prints every chunk. The same day he set the title in the words "change the title to the following: Mapping Marbled Murrelet habitat in the Clayoquot Sound using ALS LiDAR data".
+
+## Target journal
+
+Forest Ecology and Management, chosen by Seamus on 2026-10-22 over Avian Conservation and Ecology, whose 1300 USD fee breaks the no-author-fee rule. Its subscription route charges authors nothing. It asks for an abstract of at most 250 words, 1 to 7 keywords, double spacing with continuous line numbers, highlights as a separate file of 3 to 5 bullets of at most 85 characters, and single anonymized review, so the author's name stays on the manuscript. Elsevier's generative AI policy, updated June 2026, requires AI-written code to be declared in Methods and AI use in preparing the text to be declared in a section immediately before the references. On 2026-10-22 Seamus asked, in the words "remove the AI declaration", for that section to be taken out, and the two Methods sentences were left in place.
+
 ## Reported numbers
 
 No number is typed into the prose. Each chunk writes its result to a table in `03.outputs/tables/`, and the text reads it back with inline R, `` `r tbl("T1_example.csv")$value[1]` ``. A number is written into a sentence only after the chunk has run and its output has been read.

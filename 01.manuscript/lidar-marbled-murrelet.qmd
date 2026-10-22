@@ -1,5 +1,5 @@
 ---
-title: "Mapping Marbled Murrelet nesting habitat from open airborne laser scanning in Clayoquot Sound, British Columbia"
+title: "Mapping Marbled Murrelet habitat in the Clayoquot Sound using ALS LiDAR data"
 subtitle: ""
 author:
     - name: Murphy, S
@@ -11,7 +11,8 @@ date: today
 format:
   docx:
     prefer-html: true
-    reference-doc: ../04.references/style-formal.docx
+    number-sections: true
+    reference-doc: ../04.references/style-submission.docx
     highlight-style: pygments
     latex_engine: xelatex
 
@@ -47,28 +48,27 @@ engine: knitr
 citeproc: true
 editor: visual
 bibliography: ../04.references/references.bib
-csl: ../04.references/springer-basic-author-date.csl
+csl: ../04.references/elsevier-harvard.csl
 keywords:
   - airborne laser scanning
   - Brachyramphus marmoratus
-  - Clayoquot Sound
   - habitat suitability
   - lidar
-  - marbled murrelet
   - MaxEnt
   - model transferability
-  - nesting habitat
   - old-growth forest
 ---
 
 ```{r}
 #| label: setup
-#| echo: true
+#| echo: !expr '!knitr::pandoc_to("docx")'
 #| output: false
 # Rendering this document runs the whole analysis. Every table and figure is written
 # by a chunk below into 03.outputs, and every number in the prose is read back from
-# those files by inline R, so the text cannot drift from the results.
+# those files by inline R, so the text cannot drift from the results. The code is
+# printed in the html render and left out of the Word render.
 library(knitr)
+knitr::opts_hooks$set(echo = \(options) { if (knitr::pandoc_to("docx")) options$echo <- FALSE; options })
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 
 repo <- normalizePath("..")
@@ -84,6 +84,7 @@ pv <- \(p) if (p < 0.001) "*P* < 0.001" else paste0("*P* = ", fmt(p))
 ev <- \(what, col = "value", m = "local") { t <- tbl("T4_evaluation.csv"); t[[col]][t$model == m & t$metric == what] }
 sep <- \(what, col) { t <- tbl("T3_separability.csv"); t[[col]][t$measure == what] }
 smp <- \(what) { t <- tbl("T2_sample.csv"); t$n[t$step == what] }
+acc <- \(cls) if (cls == "nest") 100 * ev("Nest cells above threshold") / ev("Nest cells") else 100 * (1 - ev("Background cells above threshold") / ev("Background cells"))
 
 # Run `code` only when `path` is missing, so a render rebuilds an output that was
 # deleted and leaves a finished one alone. Delete the file to force a rebuild.
@@ -95,9 +96,13 @@ build_once <- function(path, code) {
 
 # Abstract {.unnumbered}
 
-By 2019, open airborne laser scanning had measured old-growth forest structure along much of the British Columbia coast, but the one Marbled Murrelet nesting-habitat model built from such scans and located nests had been trained in Desolation Sound and lost accuracy when moved to Clayoquot Sound, and little was known about whether a model built from local nests would do better. This study rebuilt that model, maximum entropy modeling of forest vertical complexity and internal forest gaps in 1 ha cells, in Clayoquot Sound on the west coast of Vancouver Island from the provincial laser scans of 2019 and nests of radio-tracked birds from 2000 to 2002 (`r smp("nests in file")` nests, which gave `r smp("nest cells in available forest")` nest cells in scanned, tall, unharvested forest, against `r fmt(smp("background cells in available forest"), 0)` background cells). The model was scored by five-fold spatial cross-validation in 10 km blocks and compared with the same model transferred from Desolation Sound. Neither measure separated nest cells from background cells (forest vertical complexity, `r pv(sep("fvc", "p_value"))`; internal forest gaps, `r pv(sep("empty_gaps", "p_value"))`), and nest cells held more internal gaps than background cells, the reverse of the direction found in Desolation Sound. The local model ranked held-out nest cells above background cells no more often than chance (area under the curve `r fmt(ev("AUC"))`, 95 percent confidence interval `r fmt(ev("AUC", "low"))` to `r fmt(ev("AUC", "high"))`; kappa `r fmt(ev("Kappa"))`) and did not overfit (ratio of held-out to training error `r fmt(ev("RMSE ratio"))`). Its interval included the area under the curve of `r fmt(ev("AUC", m = "transferred"))` reached by the transferred model, so the local model could not be shown to outperform the borrowed one. With so few located nests, open laser scans alone did not support a local nesting-habitat model in Clayoquot Sound, and a transferred model, or one fitted to nests pooled across regions, offered the better-supported basis for mapping nesting habitat there until more nests could be located.
+By 2019, provincial airborne laser scanning had measured old-growth forest structure along much of the British Columbia coast, but the one Marbled Murrelet nesting-habitat model built from such scans and located nests, trained in Desolation Sound, lost accuracy when moved to Clayoquot Sound, and whether a model built from local nests would do better was unknown. This study rebuilt that model, maximum entropy modeling of forest vertical complexity and internal forest gaps in 1 ha cells, in Clayoquot Sound from the 2019 scans and the nests of birds radio-tracked from 2000 to 2002 (`r smp("nest cells in available forest")` nest cells and `r fmt(smp("background cells in available forest"), 0)` background cells in scanned, tall, unharvested forest), and scored it by five-fold spatial cross-validation in 10 km blocks. Neither measure separated nest cells from background cells (forest vertical complexity, `r pv(sep("fvc", "p_value"))`; internal forest gaps, `r pv(sep("empty_gaps", "p_value"))`), and nest cells held more internal gaps than background cells, the reverse of the direction found in Desolation Sound. At each fold's threshold the model classed `r fmt(acc("nest"), 1)` percent of held-out nest cells and `r fmt(acc("background"), 1)` percent of background cells correctly, an average accuracy of `r fmt((acc("nest") + acc("background")) / 2, 1)` percent, no better than chance, and its ranking of nest cells could not be shown to differ from that of the model transferred from Desolation Sound. With so few located nests, open laser scans did not support a local nesting-habitat model in Clayoquot Sound, and the transferred model, or one fitted to nests pooled across regions, offered the better-supported basis for mapping nesting habitat there.
 
-# INTRODUCTION
+# Keywords {.unnumbered}
+
+Airborne laser scanning; *Brachyramphus marmoratus*; habitat suitability; lidar; MaxEnt; model transferability; old-growth forest
+
+# Introduction
 
 The Marbled Murrelet, *Brachyramphus marmoratus* (Gmelin, 1789), a seabird that commutes between the ocean and nest sites inland in old-growth coniferous forest, was listed as threatened in both Canada and the United States, and loss of that forest was the primary reason given for its decline [@burger2001using]. Because nests were cryptic and difficult to locate [@burger2001using], the nesting habitat that conservation planning in British Columbia set out to retain was mapped from forest inventory, air photographs and aerial surveys, and then judged against the few nests that radio telemetry had found [@mather2010marbled; @burger2018reliability].
 
@@ -117,7 +122,7 @@ readr::read_csv("../02.inputs/derived/review-attributes.csv", show_col_types = F
   knitr::kable(format = "pipe")
 ```
 
-# METHODS
+# Methods
 
 ## Study area
 
@@ -292,7 +297,7 @@ review_reasons <- records |>
   dplyr::count(reason, name = "Records", sort = TRUE)
 ```
 
-The literature review followed a protocol fixed before the first search on 28 September 2026, with one question for each objective and a third asking whether the comparison had already been made. A curated reference library and Semantic Scholar were searched for Marbled Murrelet combined with airborne laser scanning or lidar, with habitat suitability, MaxEnt or transferability, and with Clayoquot Sound, and one round of backward and forward citation chasing was run from five central records. Records were retained if they were peer-reviewed articles, reviews, chapters, conference papers or agency reports that supplied a method, threshold or data product, were published in English from 1990 to 2026, and bore on laser-scan measures at nest sites, nesting-habitat models and their transfer, or nesting habitat in Clayoquot Sound. Of `r rc("Records retrieved")` records retrieved, `r rc("Unique after removing duplicates")` were unique, `r rc("Excluded on title and abstract")` were excluded on title and abstract and `r rc("Retained")` were retained, of which `r rc("Read in full")` were read in full. The full text of `r rc("Full text not reached")` could not be reached, among them unpublished reports and a thesis from the 1990s and journal articles held behind paywalls. A single reader screened and read every record.
+The literature review followed a protocol fixed before the first search on 28 September 2026, with one question for each objective and a third asking whether the comparison had already been made. A curated reference library and Semantic Scholar were searched for Marbled Murrelet combined with airborne laser scanning or lidar, with habitat suitability, MaxEnt or transferability, and with Clayoquot Sound, and one round of backward and forward citation chasing was run from five central records. Records were retained if they were peer-reviewed articles, reviews, chapters, conference papers or agency reports that supplied a method, threshold or data product, were published in English from 1990 to 2026, and bore on laser-scan measures at nest sites, nesting-habitat models and their transfer, or nesting habitat in Clayoquot Sound. Of `r rc("Records retrieved")` records retrieved, `r rc("Unique after removing duplicates")` were unique, `r rc("Excluded on title and abstract")` were excluded on title and abstract and `r rc("Retained")` were retained, of which `r rc("Read in full")` were read in full. The full text of `r rc("Full text not reached")` could not be reached, among them unpublished reports and a thesis from the 1990s and journal articles held behind paywalls. Records were screened and read with the help of Claude (Anthropic), a large language model, and every quotation taken from them was checked word for word against the source text by a script.
 
 ## Nest data
 
@@ -547,7 +552,7 @@ build_once("../03.outputs/tables/T3_separability.csv", sample |>
 
 ## Evaluation
 
-Held-out predictions were pooled across folds and scored with the measures used by Murphy et al. [-@murphy2026spatial]. Discrimination was measured by AUC with a DeLong 95 percent confidence interval [@robin2011proc] and by the continuous Boyce index [@hirzel2006evaluating]. Classification at each fold's threshold was summarized by overall accuracy with an exact binomial interval, Cohen's kappa, and the commission and omission error of each class. Agreement between prediction and the observed 0 or 1 outcome was measured by the coefficient of determination (*R*²) of a linear regression of outcome on prediction with its *F* test, root mean square error (RMSE), relative RMSE (RMSE over the mean outcome), mean absolute error, Brier score and Theil's *U* bias, the share of squared error due to the difference between mean prediction and mean outcome. Overfitting was measured by the RMSE ratio, held-out RMSE over training RMSE, with a model rejected above 1.1 [@murphy2026spatial]. Residual autocorrelation was tested by Moran's *I* with inverse-distance weights and by the Durbin-Watson test on residuals ordered by easting. The Clayoquot Sound model was compared with the Desolation Sound model of Cosgrove et al. [-@cosgrove2024modeling] in its own area and transferred to Clayoquot Sound on the two measures those authors reported, AUC and the Boyce index. Analyses were run in R `r getRversion()` [@rcore2024r] with lidR `r packageVersion("lidR")`, maxnet `r packageVersion("maxnet")`, blockCV `r packageVersion("blockCV")`, pROC `r packageVersion("pROC")` and ecospat `r packageVersion("ecospat")`.
+Held-out predictions were pooled across folds and scored with the measures used by Murphy et al. [-@murphy2026spatial]. Discrimination was measured by AUC with a DeLong 95 percent confidence interval [@robin2011proc] and by the continuous Boyce index [@hirzel2006evaluating]. Classification at each fold's threshold was summarized by overall accuracy with an exact binomial interval, Cohen's kappa, and the commission and omission error of each class. Agreement between prediction and the observed 0 or 1 outcome was measured by the coefficient of determination (*R*²) of a linear regression of outcome on prediction with its *F* test, root mean square error (RMSE), relative RMSE (RMSE over the mean outcome), mean absolute error, Brier score and Theil's *U* bias, the share of squared error due to the difference between mean prediction and mean outcome. Overfitting was measured by the RMSE ratio, held-out RMSE over training RMSE, with a model rejected above 1.1 [@murphy2026spatial]. Residual autocorrelation was tested by Moran's *I* with inverse-distance weights and by the Durbin-Watson test on residuals ordered by easting. The Clayoquot Sound model was compared with the Desolation Sound model of Cosgrove et al. [-@cosgrove2024modeling] in its own area and transferred to Clayoquot Sound on the two measures those authors reported, AUC and the Boyce index. Analyses were run in R `r getRversion()` [@rcore2024r] with lidR `r packageVersion("lidR")`, maxnet `r packageVersion("maxnet")`, blockCV `r packageVersion("blockCV")`, pROC `r packageVersion("pROC")` and ecospat `r packageVersion("ecospat")`. The R code was written to the author's design with Claude (Anthropic), a large language model, and every chunk is held in the manuscript source and was run in the render that produced this document.
 
 ```{r}
 #| label: evaluation
@@ -614,7 +619,7 @@ build_once("../03.outputs/figures/F2_structure.png", {
 })
 ```
 
-# RESULTS
+# Results
 
 ## Sample
 
@@ -645,7 +650,7 @@ knitr::include_graphics("../03.outputs/figures/F2_structure.png")
 
 ## Model evaluation
 
-The Clayoquot Sound model discriminated nest cells from background cells no better than chance (@tbl-evaluation). Its AUC was `r fmt(ev("AUC"))` (95 percent CI `r fmt(ev("AUC", "low"))` to `r fmt(ev("AUC", "high"))`), against `r fmt(ev("AUC", m = "desolation"))` for the Desolation Sound model in its own area and `r fmt(ev("AUC", m = "transferred"))` for that model transferred to Clayoquot Sound, and its Boyce index was `r fmt(ev("Boyce index"))` against `r fmt(ev("Boyce index", m = "desolation"))` and `r fmt(ev("Boyce index", m = "transferred"))`. At the training thresholds, `r ev("Nest cells above threshold")` of `r ev("Nest cells")` held-out nest cells and `r fmt(ev("Background cells above threshold"), 0)` of `r fmt(ev("Background cells"), 0)` background cells were classed as nesting habitat, so the omission error for nests was `r fmt(ev("Omission error, nest"))` and the commission error for nests `r fmt(ev("Commission error, nest"))`, overall accuracy was `r fmt(ev("Overall accuracy"))` (95 percent CI `r fmt(ev("Overall accuracy", "low"))` to `r fmt(ev("Overall accuracy", "high"))`) and kappa `r fmt(ev("Kappa"))` (`r fmt(ev("Kappa", "low"))` to `r fmt(ev("Kappa", "high"))`).
+The Clayoquot Sound model discriminated nest cells from background cells no better than chance (@tbl-evaluation). Its AUC was `r fmt(ev("AUC"))` (95 percent CI `r fmt(ev("AUC", "low"))` to `r fmt(ev("AUC", "high"))`), against `r fmt(ev("AUC", m = "desolation"))` for the Desolation Sound model in its own area and `r fmt(ev("AUC", m = "transferred"))` for that model transferred to Clayoquot Sound, and its Boyce index was `r fmt(ev("Boyce index"))` against `r fmt(ev("Boyce index", m = "desolation"))` and `r fmt(ev("Boyce index", m = "transferred"))`. At the training thresholds, `r ev("Nest cells above threshold")` of `r ev("Nest cells")` held-out nest cells and `r fmt(ev("Background cells above threshold"), 0)` of `r fmt(ev("Background cells"), 0)` background cells were classed as nesting habitat, so `r fmt(acc("nest"), 1)` percent of nest cells and `r fmt(acc("background"), 1)` percent of background cells were classed correctly, an average accuracy of `r fmt((acc("nest") + acc("background")) / 2, 1)` percent. The omission error for nests was `r fmt(ev("Omission error, nest"))` and the commission error for nests `r fmt(ev("Commission error, nest"))`, overall accuracy was `r fmt(ev("Overall accuracy"))` (95 percent CI `r fmt(ev("Overall accuracy", "low"))` to `r fmt(ev("Overall accuracy", "high"))`) and kappa `r fmt(ev("Kappa"))` (`r fmt(ev("Kappa", "low"))` to `r fmt(ev("Kappa", "high"))`).
 
 The model did not overfit, its RMSE ratio of `r fmt(ev("RMSE ratio"))` lying below the rejection line of 1.1. The RMSE was `r fmt(ev("RMSE"))`, the mean absolute error `r fmt(ev("MAE"))`, the Brier score `r fmt(ev("Brier score"))` and the relative RMSE `r fmt(ev("Relative RMSE"), 0)`, and Theil's *U* bias of `r fmt(ev("Theil's U bias"))` showed that nearly all of the error was systematic, because predictions averaged `r fmt(ev("Mean prediction"))` while nest cells made up `r fmt(ev("Nest share of cells"), 3)` of all cells. Predictions explained none of the variation in the outcome [*R*² = `r fmt(ev("R2"), 5)`, *F*(`r ev("F statistic", "low")`, `r fmt(ev("F statistic", "high"), 0)`) = `r fmt(ev("F statistic"))`, `r pv(ev("R2", "p_value"))`]. Residuals were spatially autocorrelated [Moran's *I* = `r fmt(ev("Moran's I of residuals"))`, `r pv(ev("Moran's I of residuals", "p_value"))`] but showed no serial correlation along easting [Durbin-Watson = `r fmt(ev("Durbin-Watson"))`, `r pv(ev("Durbin-Watson", "p_value"))`].
 
@@ -662,7 +667,7 @@ tbl("T4_evaluation.csv") |>
   flextable::flextable() |> flextable::align(j = 2:4, align = "right", part = "body") |> flextable::align(align = "center", part = "header") |> flextable::set_table_properties(layout = "autofit", width = 1)
 ```
 
-# DISCUSSION
+# Discussion
 
 In Clayoquot Sound, a MaxEnt model rebuilt from `r smp("nest cells in available forest")` local nest cells and open 2019 laser scans ranked held-out nest cells above background cells no more often than chance, and its 95 percent interval on AUC took in both chance and the `r fmt(ev("AUC", m = "transferred"))` reached by the same model transferred from Desolation Sound [@cosgrove2024modeling]. The local model therefore did not outperform the borrowed one, and these data could not show that it did worse. In Oregon a locally selected lidar model also improved little on a transferred one, scoring 0.78 against 0.73 [@hagar2018modeling], but there the transferred model was already adequate on 772 surveyed stands, whereas in Clayoquot Sound the local model had too few nests to learn from, and the Oregon local score may have been measured on the data it was fitted to.
 
@@ -674,12 +679,24 @@ Sample size limited the comparison, because with `r smp("nest cells in available
 
 For management in Clayoquot Sound, these results did not support replacing the transferred Desolation Sound model, or the provincial habitat model, which placed 69.4 percent of Clayoquot Sound nests in suitable habitat [@burger2018reliability], with a model fitted to the few local nests. Fitting one model to nests pooled across regions with terms for region, as Silvergieter and Lank [-@silvergieter2011patch] did with ground plots, or measuring individual tall trees from the scans, which formed the model of Lamphear et al. [-@lamphear2025marbled], might draw more from open scans than two stand-level measures, and both could be tested with data already public.
 
-# CONCLUSION
+# Conclusion
 
 Open laser scans flown in 2019 and `r smp("nest cells in available forest")` local nest cells were not enough to build a Marbled Murrelet nesting-habitat model for Clayoquot Sound that separated nests from available forest, and the local model could not be shown to improve on the model transferred from Desolation Sound. Until more nests could be located in Clayoquot Sound, the transferred model, or a model fitted to nests pooled across regions, offered the better-supported basis for mapping nesting habitat there.
 
 # Data availability {.unnumbered}
 
-Every line of code that built, fitted and tested the model is printed in this document and held at https://github.com/seamusrobertmurphy/lidar-marbled-murrelet. Nest locations are public under a CC0 license at the Movebank Data Repository [@cooke2022marbled], point clouds at LidarBC (https://lidar.gov.bc.ca/) under the Open Government Licence British Columbia, and harvest years at the National Terrestrial Ecosystem Monitoring System [@hermosilla2016mass].
+Every line of code that built, fitted and tested the model is held in the manuscript source at https://github.com/seamusrobertmurphy/lidar-marbled-murrelet. Nest locations are public under a CC0 license at the Movebank Data Repository [@cooke2022marbled], point clouds at LidarBC (https://lidar.gov.bc.ca/) under the Open Government Licence British Columbia, and harvest years at the National Terrestrial Ecosystem Monitoring System [@hermosilla2016mass].
 
-# LITERATURE CITED {.unnumbered}
+# Author contributions {.unnumbered}
+
+Seamus Murphy carried out the conceptualization, methodology, software, formal analysis, data curation and visualization, and wrote, reviewed and edited the manuscript.
+
+# Funding {.unnumbered}
+
+This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors.
+
+# Competing interests {.unnumbered}
+
+The author declares no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+# References {.unnumbered}
