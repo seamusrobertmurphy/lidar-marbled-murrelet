@@ -21,3 +21,9 @@ Tables are numbered T1, T2 and figures F1, F2 in `03.outputs/`, in order of firs
 ## Citations
 
 Every entry in `04.references/references.bib` is taken from a CrossRef query, never from memory. A quotation is checked verbatim against the PDF in `04.references/literature/`.
+
+## Study design
+
+Approved by Seamus on 2026-09-28 in the words "yes build the clayoquot design first", in answer to this proposal. The model of Cosgrove et al. (2024), MaxEnt on forest vertical complexity and internal forest gaps at 100 m, is rebuilt in Clayoquot Sound from that area's own radio-tracked nests (Movebank CS_nests.csv) and LidarBC scans alone. It is tested by holding out groups of nests that sit far apart, and it is compared with the model Cosgrove et al. trained in Desolation Sound and transferred to Clayoquot Sound, which scored an AUC of 0.63. The question is whether a model built from local nests beats one borrowed from 150 km away. The small nest sample is stated as a limitation. No nest location is mapped in the paper.
+
+The train in Desolation Sound, test in Clayoquot repeat was the first design. It was dropped on 2026-09-28 because LidarBC covers only 11 of the 127 Desolation Sound nests.
