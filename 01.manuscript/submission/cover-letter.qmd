@@ -1,0 +1,33 @@
+---
+format:
+  docx:
+    reference-doc: ../../04.references/style-formal.docx
+engine: knitr
+---
+
+Seamus Murphy\
+ORCID 0000-0002-1792-0351\
+seamusrobertmurphy@gmail.com
+
+`r tb <- \(f) read.csv(file.path("../../03.outputs/tables", f), check.names = FALSE); ev <- \(what, col = "value", m = "local") { t <- tb("T4_evaluation.csv"); t[[col]][t$model == m & t$metric == what] }; smp <- \(what) { t <- tb("T2_sample.csv"); t$n[t$step == what] }; fmt <- \(x, d = 2) formatC(x, format = "f", digits = d, big.mark = ","); acc <- \(cls) if (cls == "nest") 100 * ev("Nest cells above threshold") / ev("Nest cells") else 100 * (1 - ev("Background cells above threshold") / ev("Background cells")); trimws(format(Sys.Date(), "%e %B %Y"))`
+
+The Editors\
+*Forest Ecology and Management*
+
+Dear Editors,
+
+I submit the research paper "`r rmarkdown::yaml_front_matter("../lidar-marbled-murrelet.qmd")$title`" for consideration in *Forest Ecology and Management*.
+
+The Marbled Murrelet, a seabird listed as threatened in Canada and the United States, nests in old-growth coniferous forest, and in British Columbia the forest retained for it is chosen with habitat models. Cosgrove et al. (2024) built the first such model in the province from airborne laser scans and located nests, in Desolation Sound, where it reached an area under the curve (AUC) of `r fmt(ev("AUC", m = "desolation"))`, but transferred to Clayoquot Sound it reached `r fmt(ev("AUC", m = "transferred"))`. The paper tested whether the same model, rebuilt from Clayoquot Sound's own radio-tracked nests and the province's open 2019 laser scans, would do better.
+
+The local model, rebuilt from `r smp("nest cells in available forest")` nest cells and `r fmt(smp("background cells in available forest"), 0)` background cells in tall, unharvested forest and scored on spatially separate folds, did no better than chance. It classed `r fmt(acc("nest"), 1)` percent of held-out nest cells and `r fmt(acc("background"), 1)` percent of background cells correctly, an average accuracy of `r fmt((acc("nest") + acc("background")) / 2, 1)` percent, and its AUC of `r fmt(ev("AUC"))` (95 percent confidence interval `r fmt(ev("AUC", "low"))` to `r fmt(ev("AUC", "high"))`) took in both chance and the `r fmt(ev("AUC", m = "transferred"))` of the transferred model. Nest cells held more internal forest gaps than background cells, the reverse of the Desolation Sound relation, which agrees with ground plots that found canopy height and complexity relating to nest sites in opposite directions in the two sounds.
+
+For forest managers the result means that a model fitted to the few located nests in Clayoquot Sound gave no reason to replace the transferred or provincial models used to plan the retention of nesting habitat there. The paper names two tests that public data already allow, a model fitted to nests pooled across regions and measures of individual tall trees taken from the scans.
+
+A structured review of the literature, in which every retained record that could be reached was read in full, found no earlier laser-scan model built from Clayoquot Sound nests. Every line of code that built, fitted and scored the model is held in the public manuscript source, and the nest locations, laser scans and harvest records are all public.
+
+The manuscript has not been published and is not under consideration by another journal. I am its sole author and declare no competing interests.
+
+Yours sincerely,
+
+Seamus Murphy
