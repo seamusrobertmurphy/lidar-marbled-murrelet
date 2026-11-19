@@ -1,6 +1,14 @@
 step,n
 nests in file,36
+nests found in 2000,8
+nests found in 2001,10
+nests found in 2002,18
 nest cells scanned,20
+nest cells under 20 m tall,0
+nest cells with returns in under 90 percent of 1 m columns,4
+nest cells under 10 points per square meter,4
+nest cells harvested from 1998 to 2022,0
 nest cells in available forest,16
 background cells scanned,7869
 background cells in available forest,3827
+"lowest forest height of nest cells removed, m",30.780000686645508

@@ -1,0 +1,7 @@
+model,metric,value,low,high,p_value
+contractor classes,AUC,0.530131303893389,0.38922886919139177,0.6710337385953863,NA
+outlier removal,AUC,0.5283511889208257,0.3850356937749597,0.6716666840666916,NA
+outlier removal,DeLong Z,0.6123282736492422,NA,NA,0.5403205868507579
+outlier removal,"Points removed, percent",1.6660409693754787,1.6259186017835816,1.7061633369673757,NA
+outlier removal,"Points removed SD, percent",1.2686353682430755,NA,NA,NA
+outlier removal,Cells compared,3843,NA,NA,NA
