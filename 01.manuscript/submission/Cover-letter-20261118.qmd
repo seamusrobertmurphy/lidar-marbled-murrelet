@@ -16,7 +16,7 @@ The Editors\
 
 Dear Editors,
 
-I submit the research paper "`r rmarkdown::yaml_front_matter("../lidar-marbled-murrelet-20261118.qmd")$title`" for consideration in *Forest Ecology and Management*.
+I submit the research paper "`r rmarkdown::yaml_front_matter("../Manuscript-20261118.qmd")$title`" for consideration in *Forest Ecology and Management*.
 
 The Marbled Murrelet, a seabird listed as threatened in Canada and the United States, nests in old-growth coniferous forest, and in British Columbia the forest retained for it is chosen with habitat models. Cosgrove et al. (2024) built such a model from airborne laser scans and located nests in Desolation Sound, where it reached an area under the curve (AUC) of `r fmt(ev("AUC", m = "desolation"))`. Transferred to Clayoquot Sound, it reached `r fmt(ev("AUC", m = "transferred"))`. The paper tested whether the same model, rebuilt from Clayoquot Sound's own radio-tracked nests and the province's open 2019 laser scans, would do better.
 
