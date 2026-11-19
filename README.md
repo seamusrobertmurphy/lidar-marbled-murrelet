@@ -4,7 +4,7 @@ Manuscript, data and analysis for "Mapping Marbled Murrelet habitat in the Clayo
 
 ## Current draft
 
-The current draft is dated 15 November 2026. Read it on GitHub as [lidar-marbled-murrelet-20261115.md](01.manuscript/lidar-marbled-murrelet-20261115.md), which prints every code chunk and gives each table as text. Its source is `01.manuscript/lidar-marbled-murrelet-20261115.qmd`, and its Word and HTML renders sit beside it.
+The current draft is dated 18 November 2026. Read it on GitHub as [lidar-marbled-murrelet-20261118.md](01.manuscript/lidar-marbled-murrelet-20261118.md), which prints every code chunk and gives each table as text. Its source is `01.manuscript/lidar-marbled-murrelet-20261118.qmd`, and its Word and HTML renders sit beside it.
 
 Each working day's edits go into copies dated with that day. The undated `lidar-marbled-murrelet.qmd` holds the draft of 26 October 2026.
 
@@ -18,4 +18,4 @@ Each working day's edits go into copies dated with that day. The undated `lidar-
 
 ## Rendering
 
-Open `lidar-marbled-murrelet.Rproj` in RStudio and render the dated manuscript, or run `quarto render lidar-marbled-murrelet-20261115.qmd --to docx` from `01.manuscript/`, then again with `html` and `gfm`. There are no separate scripts to run.
+Open `lidar-marbled-murrelet.Rproj` in RStudio and render the dated manuscript, or run `quarto render lidar-marbled-murrelet-20261118.qmd --to docx` from `01.manuscript/`, then again with `html` and `gfm`. There are no separate scripts to run.
