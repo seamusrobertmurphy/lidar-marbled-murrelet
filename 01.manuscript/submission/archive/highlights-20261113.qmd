@@ -1,0 +1,13 @@
+---
+title: "Highlights"
+format:
+  docx:
+    reference-doc: ../../04.references/style-formal.docx
+engine: knitr
+---
+
+- Laser scans were matched to `r tb <- \(f) read.csv(file.path("../../03.outputs/tables", f), check.names = FALSE); ev <- \(what, m = "local") { t <- tb("T4_evaluation.csv"); t$value[t$model == m & t$metric == what] }; smp <- \(what) { t <- tb("T2_sample.csv"); t$n[t$step == what] }; acc <- \(cls) if (cls == "nest") 100 * ev("Nest cells above threshold") / ev("Nest cells") else 100 * (1 - ev("Background cells above threshold") / ev("Background cells")); smp("nest cells in available forest")` Marbled Murrelet nest cells in Clayoquot Sound
+- Neither forest vertical complexity nor internal gaps set nest cells apart
+- A local model classed nests and forest at `r formatC((acc("nest") + acc("background")) / 2, format = "f", digits = 1)` percent average accuracy, near chance
+- It could not be shown to beat the model transferred from Desolation Sound
+- The transferred model, or one pooled across regions, remained the better basis

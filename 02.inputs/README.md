@@ -8,4 +8,5 @@ Each dataset sits in its own folder under `02.inputs/` with a README giving its 
 | `lidarbc/` | LidarBC 2019 point clouds | forest structure | https://lidar.gov.bc.ca/ |
 | `ntems/` | Canada Forest Harvest 1985-2022 | harvest screen | https://opendata.nfis.org/mapserver/nfis-change_eng.html |
 | `fwa/` | Freshwater Atlas Coastlines | study area map | https://catalogue.data.gov.bc.ca/dataset/freshwater-atlas-coastlines |
+| `mrdem/` | Medium Resolution Digital Elevation Model, 30 m | shaded relief of the study area map | https://canelevation-dem.s3.ca-central-1.amazonaws.com/mrdem-30/mrdem-30-dtm.tif |
 | none, read through the rnaturalearthhires package | Natural Earth 1:10 million admin 0 countries | locator inset | https://www.naturalearthdata.com/downloads/10m-cultural-vectors/10m-admin-0-countries/ |
