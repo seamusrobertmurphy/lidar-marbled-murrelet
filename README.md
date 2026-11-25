@@ -2,7 +2,7 @@
 
 ## Abstract
 
-Provincial airborne laser scans flown in 2019 measured old-growth forest structure in Clayoquot Sound, British Columbia. A nesting-habitat model for the threatened Marbled Murrelet, built from such scans and nests located in Desolation Sound, lost accuracy when transferred to Clayoquot Sound. Models fitted within one region had predicted nesting habitat better than pooled or transferred models, so a local model was expected to do better. This study rebuilt that model from 2019 scans and nests of birds radio-tracked from 2000 to 2002 (16 nest and 3,827 background cells in tall forest unharvested since 1998). Maximum entropy modeling of forest vertical complexity and internal forest gaps in 1 ha cells was scored by five-fold spatial cross-validation in 10 km blocks. Neither measure separated nest cells from background cells (forest vertical complexity, *P* = 0.54; internal forest gaps, *P* = 0.10). Nest cells had more internal forest gaps than background cells, though not significantly. The model classed 62.5 percent of held-out nest cells and 40.8 percent of background cells correctly, an average accuracy of 51.7 percent, which could not be distinguished from chance. The local model’s ranking of nest cells could not be shown to differ from that of the model transferred from Desolation Sound. With so few located nests, a local model gave no reason to replace the transferred model in mapping nesting habitat in Clayoquot Sound.
+A nesting-habitat model for the threatened Marbled Murrelet, built from airborne laser scans and nests in Desolation Sound, British Columbia, lost accuracy when transferred to Clayoquot Sound. Models fitted within one region had predicted nesting habitat better than pooled or transferred models, so a local model was expected to do better. This study rebuilt that model from 2019 scans and nests of birds radio-tracked from 2000 to 2002 (16 nest and 3,827 background cells in tall forest unharvested since 1998). Maximum entropy modeling of forest vertical complexity and internal forest gaps in 1 ha cells was scored by five-fold spatial cross-validation in 10 km blocks. Neither measure separated nest cells from background cells (forest vertical complexity, *P* = 0.54; internal forest gaps, *P* = 0.10). Nest cells had more internal forest gaps than background cells, though not significantly. The model classed 62.5 percent of held-out nest cells and 40.8 percent of background cells correctly, an average accuracy of 51.7 percent, which could not be distinguished from chance. The result held in 4 and 9 ha cells and across further checks. The local model’s ranking of nest cells could not be shown to differ from that of the model transferred from Desolation Sound. With so few located nests, a local model gave no reason to replace the transferred model in mapping nesting habitat in Clayoquot Sound.
 
 ## Figures
 
@@ -47,7 +47,7 @@ Provincial airborne laser scans flown in 2019 measured old-growth forest structu
 | Heights | Thinned points | 2019 | Normalized to a triangulated ground surface, 0 to 100 m kept | Heights above ground |
 | Measures | Heights above ground | 2019 | Five measures in 1 ha cells | Grid of 1 ha cells |
 | Harvest | Canada Forest Harvest (Hermosilla et al., 2016) | 1998 to 2022 | Stand-replacing harvest on a 30 m grid | Harvested cells |
-| Available forest | Measures and harvest | 2019 | Height, harvest and scan screens | 16 nest and 3,827 background cells |
+| Available forest | Measures and harvest | 2019 | Height, harvest and scan checks | 16 nest and 3,827 background cells |
 | Separability | Available forest | 2019 | *M* and Wilcoxon rank-sum test for each measure | <a href="#tbl-separability" class="quarto-xref">Table 4</a> |
 | Model | Available forest | 2019 | MaxEnt on two measures, five folds of 10 km hexagonal blocks, repeated over 20 other assignments | Held-out predictions |
 | Noise test | Thinned points | 2019 | Statistical outlier removal, refit on the same cells and folds | Paired AUC comparison |
@@ -87,3 +87,14 @@ Provincial airborne laser scans flown in 2019 measured old-growth forest structu
 | Theil’s U bias | 0.96 |  |  |
 | Moran’s I of residuals | 0.12\*\*\*\* |  |  |
 | Durbin-Watson | 2.01 |  |  |
+
+**Table 6.** Separability of nest and background cells, and held-out performance of the Clayoquot Sound model, in the primary analysis and five alternatives. The alternatives used 4 or 9 ha cells, dropped the two scan checks, added background cells from the nest tiles, or raised the minimum forest height to 30 m. M was the separability index, with asterisks from the Wilcoxon rank-sum test. Intervals were 95% confidence intervals for AUC and came from 1,000 bootstrap resamples for the Boyce index. \* P ≤ 0.05, \*\* P ≤ 0.01, \*\*\* P ≤ 0.001, \*\*\*\* P ≤ 0.0001.
+
+| Analysis | Nest cells | Background cells | M, forest vertical complexity | M, internal forest gaps | M, forest height | AUC | Boyce index |
+|:---|:---|:---|:---|:---|:---|:---|:---|
+| 1 ha cells, primary | 16 | 3,827 | 0.08 | 0.21 | 0.09 | 0.49 (0.36 to 0.62) | -0.20 (-0.61 to 0.62) |
+| 4 ha cells | 15 | 897 | 0.01 | 0.19 | 0.05 | 0.57 (0.43 to 0.72) | 0.31 (-0.32 to 0.66) |
+| 9 ha cells | 16 | 343 | 0.10 | 0.23 | 0.13 | 0.60 (0.48 to 0.73) | 0.40 (-0.32 to 0.62) |
+| Without scan checks | 20 | 4,835 | 0.13 | 0.26\* | 0.15 | 0.60 (0.52 to 0.69) | 0.16 (-0.30 to 0.67) |
+| Nest-tile background | 16 | 7,539 | 0.06 | 0.15 | 0.07 | 0.49 (0.34 to 0.64) | -0.43 (-0.67 to 0.46) |
+| 30 m minimum height | 12 | 2,435 | 0.19 | 0.03 | 0.14 | 0.37 (0.24 to 0.50) | -0.56 (-0.77 to 0.29) |
