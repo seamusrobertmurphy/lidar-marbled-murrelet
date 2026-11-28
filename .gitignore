@@ -14,3 +14,9 @@
 02.inputs/derived/thin/
 02.inputs/fwa/*.gpkg
 02.inputs/mrdem/*.tif
+02.inputs/mamu-habitat/*.gpkg
+
+# Working folders kept off GitHub
+05.scripts/
+scripts/
+tasks/
